@@ -1,0 +1,27 @@
+{
+  "name": "AurigaIA - Freight Forwarding Intelligence",
+  "short_name": "AurigaIA",
+  "description": "Plataforma SaaS de IA para freight forwarders. Precios spot automáticos, gestión de tarifas inteligente y comunicación automatizada.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "logistics"],
+  "lang": "es",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
