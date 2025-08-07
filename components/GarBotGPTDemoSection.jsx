@@ -320,7 +320,7 @@ const GarBotGPTDemoSection = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${
                   activeTab === tab.id
-                    ? `bg-gradient-to-r ${tab.color} text-white shadow-lg`
+                    ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white shadow-lg'
                     : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                 }`}
               >

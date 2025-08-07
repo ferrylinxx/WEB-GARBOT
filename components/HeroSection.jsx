@@ -212,29 +212,85 @@ const HeroSection = () => {
               <span className="font-bold text-transparent bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text"> profundamente humanas</span>.
             </p>
 
-            {/* Epic CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-8 mb-16">
-              <a href="https://ia.garbotgpt.com/auth?redirect=%2F">
-                <button className="group relative bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-700 hover:via-pink-700 hover:to-cyan-700 text-white font-bold py-6 px-12 rounded-2xl transition-all duration-500 transform hover:scale-110 shadow-2xl hover:shadow-purple-500/50 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-cyan-400 opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
-                  <span className="relative z-10 flex items-center gap-4 text-xl">
-                    <span className="text-2xl">🚀</span>
-                    Comenzar la Revolución
-                  </span>
-                </button>
-              </a>
+            {/* Revolutionary CTA Buttons */}
+            <div className="flex flex-col lg:flex-row gap-8 mb-16 max-w-4xl mx-auto">
+              {/* Primary CTA - Comenzar Gratis */}
+              <a href="https://ia.garbotgpt.com/auth?redirect=%2F" className="group relative flex-1">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 rounded-3xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                <button className="relative w-full bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 text-white font-black py-8 px-12 rounded-3xl transition-all duration-500 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/50 overflow-hidden border-2 border-white/20 hover:border-white/40">
+                  {/* Animated Background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-              <a href="https://ia.garbotgpt.com/auth?redirect=%2F">
-                <button className="group bg-white/10 backdrop-blur-xl hover:bg-white/20 text-white font-bold py-6 px-12 rounded-2xl transition-all duration-500 transform hover:scale-110 border border-white/30 hover:border-purple-500/50 shadow-2xl hover:shadow-cyan-500/30">
-                  <span className="flex items-center gap-4 text-xl">
-                    <span className="text-2xl">💬</span>
-                    Probar Chat Épico
-                    <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  {/* Floating Particles */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute w-2 h-2 bg-white/30 rounded-full animate-bounce opacity-0 group-hover:opacity-100"
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                          animationDelay: `${Math.random() * 2}s`,
+                          animationDuration: `${1 + Math.random()}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <span className="relative z-10 flex items-center justify-center gap-4 text-2xl">
+                    <span className="text-4xl animate-bounce">🚀</span>
+                    <div className="text-left">
+                      <div className="font-black text-2xl">Comenzar GRATIS</div>
+                      <div className="text-sm font-medium opacity-90">Sin tarjeta de crédito</div>
+                    </div>
+                    <svg className="w-8 h-8 group-hover:translate-x-2 group-hover:scale-110 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </span>
                 </button>
               </a>
+
+              {/* Secondary CTA - Ver Demo */}
+              <a href="#demo-video" className="group relative flex-1">
+                <button className="relative w-full bg-black/40 backdrop-blur-2xl hover:bg-black/60 text-white font-bold py-8 px-12 rounded-3xl transition-all duration-500 transform hover:scale-105 border-2 border-white/30 hover:border-cyan-400/60 shadow-2xl hover:shadow-cyan-500/30 overflow-hidden">
+                  <span className="relative z-10 flex items-center justify-center gap-4 text-2xl">
+                    <div className="relative">
+                      <div className="w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+                        <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-ping opacity-20"></div>
+                    </div>
+                    <div className="text-left">
+                      <div className="font-black text-2xl">Ver Demo</div>
+                      <div className="text-sm font-medium opacity-90">2 minutos épicos</div>
+                    </div>
+                  </span>
+                </button>
+              </a>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap items-center justify-center gap-8 mb-32 text-white/60">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="font-semibold">100% Gratis para empezar</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span className="font-semibold">Datos 100% seguros</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span className="font-semibold">Respuestas en 0.2s</span>
+              </div>
             </div>
 
             {/* Live Stats */}
@@ -282,13 +338,10 @@ const HeroSection = () => {
               <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 rounded-3xl blur-xl animate-pulse"></div>
               <div className="absolute -inset-2 bg-gradient-to-r from-purple-500/30 to-cyan-500/30 rounded-3xl opacity-50 animate-pulse" style={{ animationDelay: '1s' }}></div>
 
-              {/* Revolutionary Video Container */}
+              {/* Video Container */}
               <div className="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden border border-white/10 group-hover:border-purple-500/50 transition-all duration-1000 group-hover:scale-105 group-hover:shadow-purple-500/25">
 
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-pulse"></div>
-
-                {/* Epic Video Element */}
+                {/* Video Element */}
                 <div className="relative aspect-video">
                   <video
                     className="w-full h-full object-cover rounded-3xl"
@@ -302,7 +355,7 @@ const HeroSection = () => {
                   >
                     <source src="https://tecnofgb.com/wp-content/uploads/2025/08/Video-de-GarBotGPT.mp4" type="video/mp4" />
 
-                    {/* Epic Fallback */}
+                    {/* Fallback */}
                     <div className="w-full h-full bg-gradient-to-br from-purple-600 via-pink-600 to-cyan-600 flex items-center justify-center text-white">
                       <div className="text-center">
                         <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
@@ -316,7 +369,7 @@ const HeroSection = () => {
                     </div>
                   </video>
 
-                  {/* Epic Overlay Elements */}
+                  {/* Simple Overlay Elements */}
                   <div className="absolute inset-0 pointer-events-none">
                     {/* Live Indicator */}
                     <div className="absolute top-6 left-6 bg-black/50 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/20 shadow-2xl">
@@ -358,6 +411,71 @@ const HeroSection = () => {
         isOpen={showComingSoonModal}
         onClose={() => setShowComingSoonModal(false)}
       />
+
+
+
+      <style jsx>{`
+        @keyframes glitch {
+          0%, 100% { transform: translate(0); }
+          20% { transform: translate(-2px, 2px); }
+          40% { transform: translate(-2px, -2px); }
+          60% { transform: translate(2px, 2px); }
+          80% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitch-text {
+          0%, 100% { transform: translate(0); filter: hue-rotate(0deg); }
+          10% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+          20% { transform: translate(-2px, -2px); filter: hue-rotate(180deg); }
+          30% { transform: translate(2px, 2px); filter: hue-rotate(270deg); }
+          40% { transform: translate(2px, -2px); filter: hue-rotate(360deg); }
+        }
+
+        @keyframes aurora {
+          0%, 100% { transform: translateX(-100%) rotate(0deg); }
+          50% { transform: translateX(100%) rotate(180deg); }
+        }
+
+        @keyframes aurora-reverse {
+          0%, 100% { transform: translateX(100%) rotate(180deg); }
+          50% { transform: translateX(-100%) rotate(0deg); }
+        }
+
+        @keyframes aurora-vertical {
+          0%, 100% { transform: translateY(-100%) rotate(90deg); }
+          50% { transform: translateY(100%) rotate(270deg); }
+        }
+
+        @keyframes quantum-wave {
+          0%, 100% { transform: translateX(-100%) skewX(-12deg); }
+          50% { transform: translateX(100%) skewX(12deg); }
+        }
+
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+          50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+        }
+
+        @keyframes float-particle {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes quantum-pulse {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .animate-glitch { animation: glitch 0.3s ease-in-out; }
+        .animate-glitch-text { animation: glitch-text 0.5s ease-in-out; }
+        .animate-aurora { animation: aurora 20s ease-in-out infinite; }
+        .animate-aurora-reverse { animation: aurora-reverse 25s ease-in-out infinite; }
+        .animate-aurora-vertical { animation: aurora-vertical 30s ease-in-out infinite; }
+        .animate-quantum-wave { animation: quantum-wave 15s ease-in-out infinite; }
+        .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
+        .animate-float-particle { animation: float-particle 4s ease-in-out infinite; }
+        .animate-quantum-pulse { animation: quantum-pulse 2s ease-in-out infinite; }
+      `}</style>
     </section>
   );
 };

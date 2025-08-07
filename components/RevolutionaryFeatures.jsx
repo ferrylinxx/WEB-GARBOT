@@ -198,15 +198,16 @@ const RevolutionaryFeatures = () => {
 
                 {/* Progress Indicators */}
                 <div className="flex justify-center space-x-4">
-                  {features.map((_, index) => (
+                  {features.map((feature, index) => (
                     <button
                       key={index}
                       onClick={() => setActiveFeature(index)}
                       className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                        activeFeature === index 
-                          ? `bg-gradient-to-r ${features[index].color} scale-125` 
+                        activeFeature === index
+                          ? 'bg-gradient-to-r from-purple-500 to-cyan-500 scale-125 shadow-lg'
                           : 'bg-slate-600 hover:bg-slate-500'
                       }`}
+                      title={feature.title}
                     />
                   ))}
                 </div>

@@ -31,7 +31,8 @@ const Navbar = () => {
         { name: 'Blog', href: '/blog' },
         { name: 'Documentación', href: '/documentacion' },
         { name: 'FAQ', href: '/faq' },
-        { name: 'Comunidad', href: '/comunidad' }
+        { name: 'Comunidad', href: '/comunidad' },
+        { name: 'Changelog', href: '/changelog' }
       ]
     },
     {

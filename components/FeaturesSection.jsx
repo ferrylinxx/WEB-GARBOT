@@ -103,7 +103,7 @@ const FeaturesSection = () => {
 
                 {/* Active glow effect */}
                 {activeFeature === index && (
-                  <div className={`absolute inset-0 bg-gradient-to-r ${feature.color} opacity-5 animate-pulse`}></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 opacity-5 animate-pulse"></div>
                 )}
 
                 <div className="relative z-10">

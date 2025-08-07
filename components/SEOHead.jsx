@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Script from 'next/script';
 
 const SEOHead = ({
   title = "GarBotGPT - La IA Conversacional Más Avanzada del Mundo | Chat Inteligente 24/7",
@@ -48,7 +49,8 @@ const SEOHead = ({
   };
 
   return (
-    <Head>
+    <>
+      <Head>
       {/* Basic Meta Tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
@@ -87,6 +89,8 @@ const SEOHead = ({
       <link rel="manifest" href="/site.webmanifest" />
       <meta name="theme-color" content="#8b5cf6" />
       <meta name="msapplication-TileColor" content="#8b5cf6" />
+
+
       
       {/* Preconnect to external domains for performance */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -141,7 +145,16 @@ const SEOHead = ({
       <link rel="alternate" hrefLang="es" href={`${canonicalUrl}/es`} />
       <link rel="alternate" hrefLang="en" href={`${canonicalUrl}/en`} />
       <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
-    </Head>
+      </Head>
+
+      {/* Google AdSense */}
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6269718356198501"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
+    </>
   );
 };
 
