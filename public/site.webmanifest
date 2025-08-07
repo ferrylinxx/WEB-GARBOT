@@ -1,25 +1,25 @@
 {
-  "name": "AurigaIA - Freight Forwarding Intelligence",
-  "short_name": "AurigaIA",
-  "description": "Plataforma SaaS de IA para freight forwarders. Precios spot automáticos, gestión de tarifas inteligente y comunicación automatizada.",
+  "name": "GarBotGPT - IA Conversacional Avanzada",
+  "short_name": "GarBotGPT",
+  "description": "El futuro de la conversación inteligente. IA que comprende, aprende y evoluciona contigo.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#6366f1",
+  "background_color": "#000000",
+  "theme_color": "#8b5cf6",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/favicon-original.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/favicon-original.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "categories": ["business", "productivity", "logistics"],
+  "categories": ["business", "productivity", "artificial-intelligence"],
   "lang": "es",
   "dir": "ltr",
   "scope": "/",

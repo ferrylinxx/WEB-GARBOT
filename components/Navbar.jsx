@@ -54,14 +54,16 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Enhanced Logo */}
           <Link href="/" className="flex items-center gap-4 group cursor-pointer">
-            <div className={`relative w-14 h-14 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+            <div className={`relative w-14 h-14 bg-gradient-to-br from-purple-500 via-pink-600 to-cyan-600 rounded-2xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
               isScrolled ? 'shadow-xl' : 'shadow-2xl'
             }`}>
               {/* Glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
-              <svg className="relative w-8 h-8 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-600 to-cyan-600 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+              <img
+                src="/favicon-original.png"
+                alt="GarBotGPT Logo"
+                className="relative w-8 h-8 drop-shadow-lg rounded-lg"
+              />
             </div>
             <div className="hidden sm:block">
               <h1 className={`font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent transition-all duration-500 ${

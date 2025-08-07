@@ -17,7 +17,8 @@ const Footer = () => {
         { name: 'Blog', href: '/blog' },
         { name: 'Documentación', href: '/documentacion' },
         { name: 'FAQ', href: '/faq' },
-        { name: 'Comunidad', href: '/comunidad' }
+        { name: 'Comunidad', href: '/comunidad' },
+        { name: 'Changelog', href: '/changelog' }
       ]
     },
     {
@@ -65,9 +66,11 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 rounded-2xl flex items-center justify-center">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+                <img
+                  src="/favicon-original.png"
+                  alt="GarBotGPT Logo"
+                  className="w-8 h-8 rounded-lg"
+                />
               </div>
               <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
                 GarBotGPT
