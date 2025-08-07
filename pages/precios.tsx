@@ -232,7 +232,7 @@ const Precios = () => {
                             </span>
                           )}
                         </div>
-                        {billingCycle === 'yearly' && typeof plan.price.monthly === 'number' && plan.price.monthly > 0 && (
+                        {billingCycle === 'yearly' && typeof plan.price.monthly === 'number' && typeof plan.price.yearly === 'number' && plan.price.monthly > 0 && (
                           <p className="text-sm text-slate-400 mt-1">
                             ${Math.round(plan.price.yearly / 12)}/mes facturado anualmente
                           </p>
