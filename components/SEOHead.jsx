@@ -145,15 +145,14 @@ const SEOHead = ({
       <link rel="alternate" hrefLang="es" href={`${canonicalUrl}/es`} />
       <link rel="alternate" hrefLang="en" href={`${canonicalUrl}/en`} />
       <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
-      </Head>
 
       {/* Google AdSense */}
-      <Script
+      <script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6269718356198501"
         crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
+      ></script>
+      </Head>
     </>
   );
 };

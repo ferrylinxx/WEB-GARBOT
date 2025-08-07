@@ -272,7 +272,7 @@ const HeroSection = () => {
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center justify-center gap-8 mb-32 text-white/60">
+            <div className="flex flex-wrap items-center justify-center gap-8 mb-48 text-white/60">
               <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -318,7 +318,7 @@ const HeroSection = () => {
           </div>
 
           {/* Revolutionary Video Section */}
-          <div className={`relative transition-all duration-2000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+          <div className={`relative pt-16 transition-all duration-2000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             {/* Floating AI Elements */}
             {Array.from({ length: 8 }).map((_, i) => (
               <div
@@ -372,7 +372,7 @@ const HeroSection = () => {
                   {/* Simple Overlay Elements */}
                   <div className="absolute inset-0 pointer-events-none">
                     {/* Live Indicator */}
-                    <div className="absolute top-6 left-6 bg-black/50 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/20 shadow-2xl">
+                    <div className="absolute top-0 left-6 bg-black/50 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/20 shadow-2xl">
                       <div className="flex items-center gap-3">
                         <div className="relative">
                           <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -383,7 +383,7 @@ const HeroSection = () => {
                     </div>
 
                     {/* Stats Overlay */}
-                    <div className="absolute top-6 right-6 bg-black/50 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/20 shadow-2xl">
+                    <div className="absolute top-0 right-6 bg-black/50 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/20 shadow-2xl">
                       <div className="text-white text-sm font-bold">
                         2.3M+ usuarios activos
                       </div>
