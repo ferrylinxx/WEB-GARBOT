@@ -1,0 +1,52 @@
+# robots.txt para GarBotGPT
+# Optimizado para SEO y rastreo de motores de búsqueda
+
+# Permitir acceso a todos los bots
+User-agent: *
+Allow: /
+
+# Bloquear archivos y directorios innecesarios
+Disallow: /api/
+Disallow: /_next/static/
+Disallow: /admin/
+Disallow: /private/
+
+# Googlebot específico
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Googlebot para imágenes
+User-agent: Googlebot-Image
+Allow: /
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# Bloquear bots maliciosos conocidos
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap
+Sitemap: https://garbotgpt.com/sitemap.xml
+Sitemap: https://garbotgpt.com/sitemap-0.xml
+
+# Host preferido
+Host: https://garbotgpt.com
+
