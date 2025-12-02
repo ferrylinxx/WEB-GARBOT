@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+// Lazy initialization para evitar errores durante el build
+let openaiInstance: OpenAI | null = null
+
+function getOpenAI(): OpenAI {
+  if (!openaiInstance) {
+    openaiInstance = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build'
+    })
+  }
+  return openaiInstance
+}
 
 // Límite de uso similar al chat
 const ipUsageMap = new Map<string, { count: number; resetTime: number }>()
@@ -60,6 +68,7 @@ export async function POST(request: NextRequest) {
     const truncatedText = text.slice(0, 4000) // Limitar para no exceder tokens
 
     // Analizar con GPT
+    const openai = getOpenAI()
     const analysis = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
