@@ -151,22 +151,7 @@ export default function Services() {
         </div>
 
         {/* Additional info */}
-        <div className={`mt-16 text-center transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`} style={{ transitionDelay: '800ms' }}>
-          <div className="glass-effect p-8 rounded-3xl inline-block">
-            <p className="text-white/80 text-lg mb-4">
-              ¿Necesitas algo más específico?
-            </p>
-            <a
-              href="https://garbotgpt.com"
-              target="_blank"
-              className="inline-block bg-gradient-to-r from-primary to-secondary px-8 py-3 rounded-full text-white font-semibold hover:shadow-xl hover:shadow-primary/50 transition-all transform hover:scale-105"
-            >
-              Explorar todas las funciones
-            </a>
-          </div>
-        </div>
+
       </div>
     </section>
   )

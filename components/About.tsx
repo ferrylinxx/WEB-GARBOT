@@ -36,9 +36,9 @@ export default function About() {
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <p className="text-primary font-semibold mb-2 uppercase tracking-wider">Introducción / Bienvenido a GarBotGPT</p>
+          <p className="text-primary font-semibold mb-2 uppercase tracking-wider">Bienvenido a GarBotGPT</p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-michroma font-bold mb-6">
-            Innovación digital con <span className="gradient-text">Inteligencia Artificial</span>
+            IA que <span className="gradient-text">comprende y se adapta</span> a ti
           </h2>
         </div>
 
@@ -56,26 +56,26 @@ export default function About() {
             </div>
 
             <h4 className="text-xl md:text-2xl font-semibold mb-6 text-white">
-              Desarrollador apasionado por la Inteligencia Artificial
+              Tu asistente de IA más inteligente
             </h4>
 
             <div className="space-y-4">
               <p className="text-white/80 leading-relaxed">
-                Soy un apasionado de la <span className="text-primary font-semibold">programación</span> y de todo lo que la inteligencia artificial puede ofrecernos.
-                Me motiva aprender, experimentar y crear soluciones que aporten valor real.
+                <span className="font-semibold text-white">GarBotGPT</span> es una plataforma de inteligencia artificial diseñada para
+                <span className="text-primary font-semibold"> transformar tu productividad</span>. No solo responde preguntas,
+                comprende contexto, genera contenido y automatiza tareas complejas.
               </p>
 
               <div className="border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded-r-lg">
                 <p className="text-white/90 leading-relaxed">
-                  <span className="font-semibold text-white">GarBotGPT</span> es el resultado de esa pasión: un proyecto personal en constante evolución,
-                  desarrollado para explorar los límites del conocimiento automático, la conversación inteligente y la creatividad digital.
+                  Desarrollado con las últimas tecnologías de IA, GarBotGPT evoluciona constantemente para ofrecerte
+                  <span className="font-semibold text-primary"> resultados precisos y relevantes</span> en cada interacción.
                 </p>
               </div>
 
               <p className="text-white/80 leading-relaxed">
-                Esta IA no solo responde; <span className="font-semibold text-primary">comprende, se adapta y crece contigo</span>.
-                Está pensada para ayudarte a resolver problemas, generar ideas, automatizar tareas y acompañarte en tu proceso
-                de aprendizaje o desarrollo profesional.
+                Desde análisis de documentos hasta generación de imágenes, desde programación hasta búsqueda web en tiempo real.
+                <span className="font-semibold text-primary"> Todo en una sola plataforma</span>.
               </p>
             </div>
 

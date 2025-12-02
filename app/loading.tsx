@@ -1,46 +1,33 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 
 export default function Loading() {
   const [progress, setProgress] = useState(0)
   const [dots, setDots] = useState('')
 
   useEffect(() => {
-    // Animación de progreso
     const progressInterval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 95) return prev
-        return prev + Math.random() * 15
-      })
+      setProgress(prev => prev >= 95 ? prev : prev + Math.random() * 15)
     }, 200)
-
-    // Animación de puntos
     const dotsInterval = setInterval(() => {
-      setDots(prev => {
-        if (prev === '...') return ''
-        return prev + '.'
-      })
+      setDots(prev => prev === '...' ? '' : prev + '.')
     }, 400)
-
-    return () => {
-      clearInterval(progressInterval)
-      clearInterval(dotsInterval)
-    }
+    return () => { clearInterval(progressInterval); clearInterval(dotsInterval) }
   }, [])
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-white">
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50 animate-gradient"></div>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black">
+      {/* Gradient glows */}
+      <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-cyan-600/20 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-blue-600/20 rounded-full blur-[150px]" />
 
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float"
+            className="absolute w-2 h-2 bg-cyan-400/30 rounded-full animate-float"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -55,82 +42,49 @@ export default function Loading() {
       <div className="text-center relative z-10 px-6">
         {/* Logo with advanced animation */}
         <div className="relative w-32 h-32 mx-auto mb-8">
-          {/* Outer rotating rings */}
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 border-r-cyan-500 animate-spin"></div>
-          <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-blue-400 border-l-cyan-400 animate-spin-reverse"></div>
-          <div className="absolute inset-4 rounded-full border-4 border-transparent border-t-blue-300 border-r-cyan-300 animate-spin-slow"></div>
-
-          {/* Pulsing glow */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 animate-pulse blur-xl"></div>
-
-          {/* Center logo container */}
-          <div className="absolute inset-6 rounded-full bg-white shadow-2xl flex items-center justify-center overflow-hidden">
-            <div className="relative w-full h-full flex items-center justify-center">
-              {/* AI Brain Icon */}
-              <svg className="w-12 h-12 text-blue-600 animate-pulse-slow" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-              </svg>
-            </div>
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-500 border-r-blue-500 animate-spin"></div>
+          <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-cyan-400 border-l-blue-400 animate-spin-reverse"></div>
+          <div className="absolute inset-4 rounded-full border-4 border-transparent border-t-cyan-300 border-r-blue-300 animate-spin-slow"></div>
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 animate-pulse blur-xl"></div>
+          <div className="absolute inset-6 rounded-full bg-black border border-white/10 flex items-center justify-center overflow-hidden">
+            <span className="text-4xl">🤖</span>
           </div>
-
-          {/* Orbiting dots */}
           <div className="absolute inset-0 animate-spin-slow">
-            <div className="absolute top-0 left-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1.5 shadow-lg"></div>
+            <div className="absolute top-0 left-1/2 w-3 h-3 bg-cyan-500 rounded-full -ml-1.5 shadow-lg"></div>
           </div>
           <div className="absolute inset-0 animate-spin-reverse">
-            <div className="absolute bottom-0 left-1/2 w-3 h-3 bg-cyan-500 rounded-full -ml-1.5 shadow-lg"></div>
+            <div className="absolute bottom-0 left-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1.5 shadow-lg"></div>
           </div>
         </div>
 
-        {/* Brand name with gradient */}
-        <h2 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-gradient-x"
-            style={{ letterSpacing: '-0.02em' }}>
+        {/* Brand name */}
+        <h2 className="text-4xl md:text-5xl font-black mb-3 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent animate-gradient-x">
           GarBotGPT
         </h2>
 
-        {/* Loading text with animated dots */}
-        <p className="text-xl text-gray-600 mb-8 font-medium">
+        {/* Loading text */}
+        <p className="text-xl text-white/60 mb-8 font-medium">
           Cargando{dots}
         </p>
 
         {/* Progress bar */}
         <div className="max-w-xs mx-auto mb-6">
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500 rounded-full transition-all duration-300 ease-out animate-gradient-x"
+              className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 rounded-full transition-all duration-300 ease-out animate-gradient-x"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-sm text-gray-500 mt-2 font-medium">
-            {Math.round(progress)}%
-          </p>
+          <p className="text-sm text-white/40 mt-2 font-medium">{Math.round(progress)}%</p>
         </div>
 
         {/* Loading messages */}
-        <div className="space-y-2 text-sm text-gray-500">
-          <p className="animate-fade-in-up" style={{ animationDelay: '0s' }}>
-            Inicializando IA...
-          </p>
-          <p className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-            Cargando modelos de lenguaje...
-          </p>
-          <p className="animate-fade-in-up" style={{ animationDelay: '1s' }}>
-            Preparando tu experiencia...
-          </p>
-        </div>
-
-        {/* Powered by badge */}
-        <div className="mt-12 flex items-center justify-center gap-2 text-xs text-gray-400">
-          <svg className="w-4 h-4 text-blue-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-          </svg>
-          <span>Powered by Advanced AI</span>
+        <div className="space-y-2 text-sm text-white/40">
+          <p className="animate-fade-in-up" style={{ animationDelay: '0s' }}>Inicializando IA...</p>
+          <p className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>Cargando modelos...</p>
+          <p className="animate-fade-in-up" style={{ animationDelay: '1s' }}>Preparando experiencia...</p>
         </div>
       </div>
-
-      {/* Corner decorations */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-cyan-500/10 to-transparent rounded-full blur-3xl"></div>
 
       <style jsx>{`
         @keyframes gradient {

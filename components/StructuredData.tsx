@@ -24,14 +24,8 @@ export default function StructuredData() {
     '@type': 'WebSite',
     name: 'GarBotGPT',
     url: 'https://garbotgpt.com',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://garbotgpt.com/search?q={search_term_string}',
-      },
-      'query-input': 'required name=search_term_string',
-    },
+    description: 'Asistente de inteligencia artificial avanzado disponible 24/7',
+    inLanguage: 'es-ES',
   }
 
   const productSchema = {

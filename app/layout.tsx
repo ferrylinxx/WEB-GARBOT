@@ -1,21 +1,23 @@
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
+import SmoothScroll from '@/components/SmoothScroll'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://garbotgpt.com'),
   title: {
-    default: 'GarBotGPT - Asistente de IA Avanzado | Inteligencia Artificial 24/7',
-    template: '%s | GarBotGPT - Tu Asistente de IA'
+    default: 'GarBotGPT - Asistente de IA Avanzado 24/7',
+    template: '%s | GarBotGPT'
   },
   icons: {
-    icon: '/logo.png',
-    shortcut: '/logo.png',
-    apple: '/logo.png',
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/apple-touch-icon.png',
   },
-  description: 'GarBotGPT es tu asistente de inteligencia artificial disponible 24/7. Genera texto, analiza documentos, crea imágenes y videos, programa código y automatiza tareas con IA adaptativa. Prueba gratis ahora.',
+  description: 'Asistente de IA 24/7. Genera texto, imágenes y videos, analiza documentos, programa código y automatiza tareas. 100% Gratis. Prueba ahora.',
   keywords: [
     // Términos principales de IA
     'inteligencia artificial',
@@ -207,9 +209,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_ES',
     url: 'https://garbotgpt.com',
-    siteName: 'GarBotGPT - Inteligencia Artificial Avanzada',
-    title: 'GarBotGPT - Asistente de IA Avanzado | Generación de Texto, Imágenes y Videos con Inteligencia Artificial',
-    description: 'Asistente de inteligencia artificial disponible 24/7. Genera texto, imágenes y videos con IA, analiza documentos PDF/Word/Excel, programa código, automatiza tareas y más. 100% Gratis. Prueba ahora.',
+    siteName: 'GarBotGPT',
+    title: 'GarBotGPT - Asistente de IA Avanzado 24/7',
+    description: 'Genera texto, imágenes y videos con IA. Analiza documentos, programa código y automatiza tareas. 100% Gratis. Prueba ahora.',
     images: [
       {
         url: '/og-image.png',
@@ -221,8 +223,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GarBotGPT - Asistente de IA Avanzado | Generación de Texto, Imágenes y Videos',
-    description: 'Inteligencia artificial 24/7. Genera texto, imágenes y videos con IA, analiza documentos, programa código y automatiza tareas. 100% Gratis.',
+    title: 'GarBotGPT - Asistente de IA Avanzado 24/7',
+    description: 'Genera texto, imágenes y videos con IA. Analiza documentos, programa código y automatiza tareas. 100% Gratis.',
     images: ['/twitter-image.png'],
     creator: '@garbotgpt',
     site: '@garbotgpt',
@@ -264,6 +266,8 @@ export default function RootLayout({
         {/* Preconnect para mejorar rendimiento */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
         {/* Favicon y App Icons */}
@@ -352,7 +356,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={montserrat.className} suppressHydrationWarning>{children}</body>
+      <body className={montserrat.className} suppressHydrationWarning>
+        <GoogleAnalytics />
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
+      </body>
     </html>
   )
 }

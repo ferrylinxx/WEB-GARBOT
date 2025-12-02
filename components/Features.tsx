@@ -135,17 +135,7 @@ export default function Features() {
 
         {/* CTA - Responsive */}
         <div className="mt-12 sm:mt-16 text-center px-4">
-          <a
-            href="https://garbotgpt.com"
-            target="_blank"
-            className="inline-flex items-center gap-2 text-lg text-[#0071e3] hover:underline font-normal"
-            style={{ letterSpacing: '-0.01em' }}
-          >
-            <span>Explorar todas las características</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
+
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ScrollProgress from '@/components/ScrollProgress'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import { getPostBySlug, getAllPosts } from '@/lib/blog'
 
 export async function generateStaticParams() {
@@ -49,23 +50,51 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
+  // Schema.org Article para SEO
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: `https://garbotgpt.com${post.image}`,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'GarBotGPT',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://garbotgpt.com/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://garbotgpt.com/blog/${slug}`,
+    },
+    keywords: post.tags.join(', '),
+    articleSection: post.category,
+    wordCount: post.content?.split(' ').length || 0,
+  }
+
   return (
     <main className="min-h-screen">
+      {/* Schema.org JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+
       <ScrollProgress />
       <Navbar />
+      <Breadcrumbs />
       
       {/* Hero Section */}
       <article className="relative px-6 pt-32 pb-20">
         <div className="max-w-4xl mx-auto">
-          {/* Breadcrumb */}
-          <nav className="mb-8 flex items-center gap-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
-            <span>→</span>
-            <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
-            <span>→</span>
-            <span className="text-gray-900">{post.category}</span>
-          </nav>
-
           {/* Category Badge */}
           <div className="mb-6">
             <span className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-semibold">

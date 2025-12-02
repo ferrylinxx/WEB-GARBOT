@@ -21,77 +21,22 @@ export default function Hero() {
       className="min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6 md:px-8 relative overflow-hidden"
       aria-label="Sección principal de GarBotGPT"
     >
-      {/* PREMIUM gradient orbs - Apple style - Ocultos en móvil para rendimiento */}
-      <div className="absolute inset-0 overflow-hidden opacity-50 hidden md:block">
-        {/* Orbe principal azul */}
+      {/* Gradientes estáticos optimizados - Sin parallax para mejor rendimiento */}
+      <div className="absolute inset-0 overflow-hidden opacity-30 hidden md:block">
         <div
-          className="absolute top-1/4 left-1/4 w-[700px] h-[700px] rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(0, 113, 227, 0.20) 0%, rgba(0, 113, 227, 0.10) 40%, transparent 70%)',
-            transform: `translateY(${scrollY * 0.3}px)`,
-            animation: 'orbPulse 8s ease-in-out infinite'
+            background: 'radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, transparent 70%)',
+            filter: 'blur(80px)',
           }}
         ></div>
-        {/* Orbe secundario cyan */}
         <div
-          className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, rgba(0, 212, 255, 0.08) 40%, transparent 70%)',
-            transform: `translateY(${scrollY * -0.2}px)`,
-            animation: 'orbPulse 10s ease-in-out infinite 2s'
+            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 70%)',
+            filter: 'blur(80px)',
           }}
         ></div>
-        {/* Orbe terciario azul claro */}
-        <div
-          className="absolute top-1/2 right-1/3 w-[500px] h-[500px] rounded-full blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, rgba(147, 197, 253, 0.12) 0%, rgba(147, 197, 253, 0.06) 40%, transparent 70%)',
-            transform: `translateY(${scrollY * 0.15}px)`,
-            animation: 'orbPulse 12s ease-in-out infinite 4s'
-          }}
-        ></div>
-      </div>
-
-      {/* Partículas flotantes premium - Solo desktop */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
-        {[...Array(20)].map((_, i) => {
-          // Valores fijos para evitar hydration mismatch
-          const positions = [
-            { left: 10, top: 20, duration: 10, delay: 0 },
-            { left: 25, top: 15, duration: 12, delay: 1 },
-            { left: 40, top: 30, duration: 9, delay: 2 },
-            { left: 55, top: 25, duration: 11, delay: 0.5 },
-            { left: 70, top: 40, duration: 13, delay: 1.5 },
-            { left: 85, top: 35, duration: 10, delay: 2.5 },
-            { left: 15, top: 60, duration: 14, delay: 3 },
-            { left: 30, top: 55, duration: 9, delay: 0.8 },
-            { left: 45, top: 70, duration: 11, delay: 1.8 },
-            { left: 60, top: 65, duration: 12, delay: 2.8 },
-            { left: 75, top: 80, duration: 10, delay: 3.5 },
-            { left: 90, top: 75, duration: 13, delay: 4 },
-            { left: 20, top: 45, duration: 11, delay: 1.2 },
-            { left: 35, top: 50, duration: 9, delay: 2.2 },
-            { left: 50, top: 10, duration: 14, delay: 3.2 },
-            { left: 65, top: 90, duration: 10, delay: 4.2 },
-            { left: 80, top: 20, duration: 12, delay: 0.3 },
-            { left: 12, top: 85, duration: 11, delay: 1.3 },
-            { left: 48, top: 42, duration: 13, delay: 2.3 },
-            { left: 92, top: 58, duration: 9, delay: 3.3 }
-          ]
-          const pos = positions[i]
-          return (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full opacity-30"
-              style={{
-                left: `${pos.left}%`,
-                top: `${pos.top}%`,
-                animation: `floatParticle ${pos.duration}s ease-in-out infinite ${pos.delay}s`,
-                boxShadow: '0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3)'
-              }}
-            />
-          )
-        })}
       </div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
@@ -104,7 +49,7 @@ export default function Hero() {
                 lineHeight: 1.05
               }}>
             <span className="block text-gray-900 mb-2">GarBotGPT</span>
-            <span className="block gradient-text">Inteligencia Artificial que Inspira</span>
+            <span className="block gradient-text">Tu asistente de IA más potente</span>
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-normal leading-relaxed px-4"
@@ -113,8 +58,8 @@ export default function Hero() {
                letterSpacing: '-0.01em'
              }}
              itemProp="description">
-            Asistente de IA disponible 24/7 para generar texto, analizar documentos, crear imágenes y automatizar tareas. <br className="hidden md:block" />
-            Creatividad y tecnología en perfecta armonía con inteligencia artificial adaptativa.
+            Genera contenido, analiza documentos, crea imágenes y automatiza tareas complejas. <br className="hidden md:block" />
+            Todo el poder de la IA en una sola plataforma.
           </p>
         </header>
 

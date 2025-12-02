@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import ScrollProgress from '@/components/ScrollProgress'
+import { useState, useLayoutEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import NavbarGTA from '@/components/NavbarGTA'
+import FooterGTA from '@/components/FooterGTA'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Change {
   type: 'feature' | 'improvement' | 'fix' | 'security'
@@ -23,6 +26,8 @@ interface Version {
 
 export default function ChangelogPage() {
   const [filterType, setFilterType] = useState<string>('all')
+  const heroRef = useRef<HTMLDivElement>(null)
+  const versionsRef = useRef<(HTMLDivElement | null)[]>([])
 
   const versions: Version[] = [
     {
@@ -307,130 +312,119 @@ export default function ChangelogPage() {
       : version.changes.filter(change => change.type === filterType)
   })).filter(version => version.changes.length > 0)
 
-  return (
-    <main className="min-h-screen">
-      <ScrollProgress />
-      <Navbar />
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(heroRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+      versionsRef.current.forEach((v, i) => {
+        if (!v) return
+        gsap.fromTo(v,
+          { y: 60, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, delay: i * 0.1, ease: 'power3.out',
+            scrollTrigger: { trigger: v, start: 'top 85%', toggleActions: 'play none none reverse' }
+          }
+        )
+      })
+    }, heroRef)
+    return () => ctx.revert()
+  }, [filterType])
 
-      {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center px-6 pt-32 pb-20">
+  return (
+    <main className="min-h-screen bg-black">
+      <NavbarGTA />
+
+      {/* Hero */}
+      <section ref={heroRef} className="relative min-h-[50vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-green-600/20 rounded-full blur-[150px]" />
+          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-emerald-600/20 rounded-full blur-[150px]" />
+        </div>
+        <div className="absolute inset-0 opacity-20"
+          style={{ backgroundImage: 'linear-gradient(rgba(34,197,94,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }}
+        />
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-block mb-6">
-            <span className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full text-sm font-semibold text-blue-600 border border-blue-500/30">
-              {versions.length} Versiones Publicadas
-            </span>
-          </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 text-gray-900"
-              style={{
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                lineHeight: 1.05
-              }}>
-            Changelog
+          <span className="inline-block px-4 py-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full text-sm font-bold text-green-400 border border-green-500/30 mb-6">
+            {versions.length} VERSIONES
+          </span>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 text-white">
+            <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Changelog</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-normal leading-relaxed"
-             style={{
-               fontWeight: 400,
-               letterSpacing: '-0.01em'
-             }}>
-            Historial completo de versiones, actualizaciones y mejoras de GarBotGPT.
+          <p className="text-xl text-white/60 max-w-3xl mx-auto">
+            Historial de versiones y actualizaciones
           </p>
         </div>
       </section>
 
       {/* Filters */}
       <section className="py-8 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-wrap gap-3 justify-center">
-            {filterTypes.map((filter) => (
-              <button
-                key={filter.id}
-                onClick={() => setFilterType(filter.id)}
-                className={`px-6 py-3 rounded-full font-semibold transition-all ${
-                  filterType === filter.id
-                    ? `bg-gradient-to-r ${filter.color} text-white shadow-lg scale-105`
-                    : 'glass-effect text-gray-700 hover:scale-105'
-                }`}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
+        <div className="max-w-5xl mx-auto flex flex-wrap gap-3 justify-center">
+          {filterTypes.map((filter) => (
+            <button
+              key={filter.id}
+              onClick={() => setFilterType(filter.id)}
+              className={`px-5 py-2 rounded-full font-bold text-sm transition-all ${
+                filterType === filter.id
+                  ? `bg-gradient-to-r ${filter.color} text-white shadow-lg`
+                  : 'bg-white/5 border border-white/10 text-white/70 hover:text-white'
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
         </div>
       </section>
 
       {/* Changelog Timeline */}
       <section className="py-12 px-6 pb-20">
         <div className="max-w-5xl mx-auto">
-          <div className="space-y-12">
+          <div className="space-y-8">
             {filteredVersions.map((version, index) => (
               <div
                 key={index}
-                className="glass-effect p-8 md:p-10 rounded-3xl hover:scale-[1.01] transition-all duration-500"
+                ref={el => { versionsRef.current[index] = el }}
+                className="rounded-3xl p-6 md:p-8 transition-all duration-500"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)', border: '1px solid rgba(255,255,255,0.1)' }}
               >
                 {/* Version Header */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 pb-6 border-b border-white/20">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 pb-6 border-b border-white/10">
                   <div>
                     <div className="flex items-center gap-4 mb-3">
                       <span className={`px-4 py-2 rounded-full text-sm font-bold ${getVersionColor(version.type)}`}>
                         v{version.version}
                       </span>
-                      <span className="text-gray-500 text-sm font-medium">
-                        {version.date}
-                      </span>
+                      <span className="text-white/40 text-sm">{version.date}</span>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                      {version.summary}
-                    </h2>
+                    <h2 className="text-xl font-bold text-white mb-2">{version.summary}</h2>
                     {version.highlights && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         {version.highlights.map((highlight, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold"
-                          >
+                          <span key={idx} className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold">
                             ⭐ {highlight}
                           </span>
                         ))}
                       </div>
                     )}
                   </div>
-                  <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold mt-4 md:mt-0">
-                    {version.type === 'major' ? 'Actualización Mayor' : version.type === 'minor' ? 'Actualización Menor' : 'Parche'}
+                  <span className="text-xs uppercase tracking-wider text-white/30 font-bold mt-4 md:mt-0">
+                    {version.type === 'major' ? 'MAYOR' : version.type === 'minor' ? 'MENOR' : 'PARCHE'}
                   </span>
                 </div>
 
                 {/* Changes List */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {version.changes.map((change, changeIndex) => (
-                    <div
-                      key={changeIndex}
-                      className="flex gap-4 p-4 rounded-2xl bg-white/30 hover:bg-white/50 transition-all"
-                    >
-                      <div className="flex-shrink-0 mt-1">
-                        {getChangeTypeIcon(change.type)}
-                      </div>
+                    <div key={changeIndex} className="flex gap-4 p-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] transition-all">
+                      <div className="flex-shrink-0 mt-1">{getChangeTypeIcon(change.type)}</div>
                       <div className="flex-1">
-                        <div className="flex items-start justify-between gap-4 mb-2">
-                          <h3 className="font-semibold text-gray-900">
-                            {change.title}
-                          </h3>
-                          <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full whitespace-nowrap">
+                        <div className="flex items-start justify-between gap-4 mb-1">
+                          <h3 className="font-bold text-white">{change.title}</h3>
+                          <span className="text-xs px-2 py-1 bg-white/10 text-white/60 rounded-full whitespace-nowrap">
                             {getChangeTypeLabel(change.type)}
                           </span>
                         </div>
-                        <p className="text-gray-700 text-sm leading-relaxed mb-2">
-                          {change.description}
-                        </p>
+                        <p className="text-white/50 text-sm leading-relaxed mb-2">{change.description}</p>
                         {change.link && (
-                          <a
-                            href={change.link}
-                            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
-                          >
-                            Ver más
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
+                          <a href={change.link} className="inline-flex items-center gap-1 text-sm text-green-400 hover:text-green-300 font-medium">
+                            Ver más →
                           </a>
                         )}
                       </div>
@@ -439,40 +433,12 @@ export default function ChangelogPage() {
                 </div>
 
                 {/* Stats */}
-                <div className="mt-6 pt-6 border-t border-white/20 flex flex-wrap gap-6 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-                    </svg>
-                    <span>
-                      <strong>{version.changes.filter(c => c.type === 'feature').length}</strong> nuevas características
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span>
-                      <strong>{version.changes.filter(c => c.type === 'improvement').length}</strong> mejoras
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                    </svg>
-                    <span>
-                      <strong>{version.changes.filter(c => c.type === 'fix').length}</strong> correcciones
-                    </span>
-                  </div>
+                <div className="mt-6 pt-6 border-t border-white/10 flex flex-wrap gap-4 text-sm text-white/50">
+                  <span>✨ <strong className="text-white">{version.changes.filter(c => c.type === 'feature').length}</strong> nuevas</span>
+                  <span>✓ <strong className="text-white">{version.changes.filter(c => c.type === 'improvement').length}</strong> mejoras</span>
+                  <span>🔧 <strong className="text-white">{version.changes.filter(c => c.type === 'fix').length}</strong> fixes</span>
                   {version.changes.filter(c => c.type === 'security').length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>
-                        <strong>{version.changes.filter(c => c.type === 'security').length}</strong> actualizaciones de seguridad
-                      </span>
-                    </div>
+                    <span>🔒 <strong className="text-white">{version.changes.filter(c => c.type === 'security').length}</strong> seguridad</span>
                   )}
                 </div>
               </div>
@@ -481,15 +447,13 @@ export default function ChangelogPage() {
 
           {filteredVersions.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-xl text-gray-600">
-                No hay cambios de tipo "{filterTypes.find(f => f.id === filterType)?.label}" en el historial.
-              </p>
+              <p className="text-xl text-white/50">No hay cambios de este tipo.</p>
             </div>
           )}
         </div>
       </section>
 
-      <Footer />
+      <FooterGTA />
     </main>
   )
 }

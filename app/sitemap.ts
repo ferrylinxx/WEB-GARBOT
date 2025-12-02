@@ -1,10 +1,23 @@
 import { MetadataRoute } from 'next'
+import { getAllPosts } from '@/lib/blog'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://garbotgpt.com'
   const currentDate = new Date()
 
-  return [
+  // Obtener todos los posts del blog
+  const posts = getAllPosts()
+
+  // Crear entradas para cada post del blog
+  const blogPosts: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }))
+
+  // Páginas estáticas
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: currentDate,
@@ -78,5 +91,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
   ]
+
+  // Combinar páginas estáticas y posts del blog
+  return [...staticPages, ...blogPosts]
 }
 

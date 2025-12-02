@@ -66,16 +66,16 @@ export default function Navbar() {
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-18">
-          {/* Logo - Premium Style */}
+          {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-3 group relative">
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-500"></div>
-              <div className="relative w-9 h-9 sm:w-11 sm:h-11 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative w-11 h-11 sm:w-14 sm:h-14 transition-all duration-300 group-hover:scale-105">
                 <Image
                   src="/logo.png"
                   alt="GarBotGPT Logo"
                   fill
-                  className="object-contain drop-shadow-lg"
+                  className="object-contain"
                   priority
                 />
               </div>

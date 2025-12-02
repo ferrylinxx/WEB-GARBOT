@@ -1,10 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import ScrollProgress from '@/components/ScrollProgress'
+import { useState, useLayoutEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import NavbarGTA from '@/components/NavbarGTA'
+import FooterGTA from '@/components/FooterGTA'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Feature {
   id: string
@@ -18,6 +20,8 @@ interface Feature {
 }
 
 export default function RoadmapPage() {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const [features, setFeatures] = useState<Feature[]>([
     {
       id: '1',
@@ -177,53 +181,64 @@ export default function RoadmapPage() {
     .filter(f => selectedStatus === 'all' || f.status === selectedStatus)
     .sort((a, b) => b.votes - a.votes)
 
-  return (
-    <main className="min-h-screen">
-      <ScrollProgress />
-      <Navbar />
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(heroRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+      cardsRef.current.forEach((card, i) => {
+        if (!card) return
+        gsap.fromTo(card,
+          { y: 60, opacity: 0, scale: 0.95 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.8, delay: i * 0.08, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' }
+          }
+        )
+      })
+    }, heroRef)
+    return () => ctx.revert()
+  }, [selectedCategory, selectedStatus])
 
-      {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center px-6 pt-32 pb-20">
+  return (
+    <main className="min-h-screen bg-black">
+      <NavbarGTA />
+
+      {/* Hero */}
+      <section ref={heroRef} className="relative min-h-[50vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[150px]" />
+          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-pink-600/20 rounded-full blur-[150px]" />
+        </div>
+        <div className="absolute inset-0 opacity-20"
+          style={{ backgroundImage: 'linear-gradient(rgba(168,85,247,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }}
+        />
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-block mb-6">
-            <span className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-sm font-semibold text-purple-600 border border-purple-500/30">
-              Roadmap 2025
-            </span>
-          </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 text-gray-900"
-              style={{
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                lineHeight: 1.05
-              }}>
-            El Futuro de GarBotGPT
+          <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-sm font-bold text-purple-400 border border-purple-500/30 mb-6">
+            ROADMAP 2025
+          </span>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 text-white">
+            El <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Futuro</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-normal leading-relaxed"
-             style={{
-               fontWeight: 400,
-               letterSpacing: '-0.01em'
-             }}>
-            Vota por las características que más te interesan y ayúdanos a priorizar nuestro desarrollo
+          <p className="text-xl text-white/60 max-w-3xl mx-auto">
+            Vota por las características que más te interesan
           </p>
         </div>
       </section>
 
       {/* Filters */}
-      <section className="py-8 px-6 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-8 px-6 border-b border-white/10">
+        <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row gap-6">
             {/* Category Filter */}
             <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-900 mb-2">Categoría</label>
+              <label className="block text-sm font-bold text-white/70 mb-2">Categoría</label>
               <div className="flex flex-wrap gap-2">
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
                       selectedCategory === cat
-                        ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg'
-                        : 'glass-effect text-gray-600 hover:text-blue-600'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg'
+                        : 'bg-white/5 border border-white/10 text-white/70 hover:text-white'
                     }`}
                   >
                     {cat === 'all' ? 'Todas' : cat}
@@ -234,16 +249,16 @@ export default function RoadmapPage() {
 
             {/* Status Filter */}
             <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-900 mb-2">Estado</label>
+              <label className="block text-sm font-bold text-white/70 mb-2">Estado</label>
               <div className="flex flex-wrap gap-2">
                 {statuses.map((status) => (
                   <button
                     key={status.value}
                     onClick={() => setSelectedStatus(status.value)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
                       selectedStatus === status.value
-                        ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg'
-                        : 'glass-effect text-gray-600 hover:text-blue-600'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg'
+                        : 'bg-white/5 border border-white/10 text-white/70 hover:text-white'
                     }`}
                   >
                     {status.label}
@@ -253,46 +268,44 @@ export default function RoadmapPage() {
             </div>
           </div>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Mostrando <span className="font-semibold text-gray-900">{filteredFeatures.length}</span> característica(s)
+          <div className="mt-6 text-center text-sm text-white/50">
+            Mostrando <span className="font-bold text-white">{filteredFeatures.length}</span> característica(s)
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-12 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredFeatures.map((feature) => (
+            {filteredFeatures.map((feature, index) => (
               <div
                 key={feature.id}
-                className="glass-effect p-6 rounded-3xl hover:scale-105 transition-all duration-500 group relative overflow-hidden"
+                ref={el => { cardsRef.current[index] = el }}
+                className="group relative rounded-3xl p-6 transition-all duration-500 hover:scale-105"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)', border: '1px solid rgba(255,255,255,0.1)' }}
               >
                 {/* Status Badge */}
                 <div className="absolute top-4 right-4">
-                  <div className={`px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${statusConfig[feature.status].color}`}>
+                  <div className={`px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${statusConfig[feature.status].color}`}>
                     {statusConfig[feature.status].icon} {statusConfig[feature.status].label}
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="mb-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-xl font-bold text-gray-900 pr-24">{feature.title}</h3>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                    {feature.description}
-                  </p>
+                  <h3 className="text-lg font-bold text-white pr-24 mb-2">{feature.title}</h3>
+                  <p className="text-white/50 text-sm leading-relaxed mb-4">{feature.description}</p>
 
                   {/* Meta Info */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                    <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-bold">
                       {feature.category}
                     </span>
-                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                    <span className="px-3 py-1 bg-white/10 text-white/60 rounded-full text-xs font-medium">
                       {feature.quarter}
                     </span>
-                    <span className={`px-3 py-1 bg-gray-100 rounded-full text-xs font-medium ${priorityConfig[feature.priority].color}`}>
+                    <span className={`px-3 py-1 bg-white/10 rounded-full text-xs font-medium ${priorityConfig[feature.priority].color}`}>
                       Prioridad {priorityConfig[feature.priority].label}
                     </span>
                   </div>
@@ -301,13 +314,11 @@ export default function RoadmapPage() {
                 {/* Vote Button */}
                 <button
                   onClick={() => handleVote(feature.id)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 glass-effect rounded-full hover:bg-blue-50 transition-all group-hover:scale-105"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-purple-500/20 transition-all"
                 >
-                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                  </svg>
-                  <span className="font-semibold text-gray-900">{feature.votes}</span>
-                  <span className="text-gray-600 text-sm">votos</span>
+                  <span className="text-purple-400">👍</span>
+                  <span className="font-bold text-white">{feature.votes}</span>
+                  <span className="text-white/50 text-sm">votos</span>
                 </button>
               </div>
             ))}
@@ -315,30 +326,27 @@ export default function RoadmapPage() {
 
           {filteredFeatures.length === 0 && (
             <div className="text-center py-20">
-              <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-gray-600 text-lg">No se encontraron características con estos filtros</p>
+              <p className="text-white/50 text-lg">No se encontraron características con estos filtros</p>
             </div>
           )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 bg-gradient-to-b from-transparent to-white/50">
+      <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="glass-effect p-12 rounded-3xl text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10"></div>
+          <div className="relative rounded-3xl p-12 text-center overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(236,72,153,0.2) 100%)', border: '1px solid rgba(168,85,247,0.3)' }}
+          >
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-purple-600/30 rounded-full blur-[100px]" />
             <div className="relative z-10">
-              <h2 className="text-4xl font-bold mb-4 text-gray-900">
-                ¿Tienes una idea?
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              <h2 className="text-4xl font-black mb-4 text-white">¿Tienes una idea?</h2>
+              <p className="text-xl text-white/60 mb-8 max-w-2xl mx-auto">
                 Comparte tus sugerencias y ayúdanos a construir el mejor asistente de IA
               </p>
               <a
                 href="/contacto"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold rounded-full hover:scale-105 transition-transform shadow-lg"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold rounded-full hover:scale-105 transition-transform shadow-lg"
               >
                 Enviar Sugerencia
               </a>
@@ -347,7 +355,7 @@ export default function RoadmapPage() {
         </div>
       </section>
 
-      <Footer />
+      <FooterGTA />
     </main>
   )
 }
