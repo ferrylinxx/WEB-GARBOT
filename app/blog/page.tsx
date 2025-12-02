@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NavbarGTA from '@/components/NavbarGTA'
 import FooterGTA from '@/components/FooterGTA'
 import { getAllPosts, getAllCategories } from '@/lib/blog'
+import { AdBanner, AdSidebar } from '@/components/GoogleAdsense'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -319,10 +320,18 @@ export default function BlogPage() {
         </div>
       </section>
 
+      {/* Ad después del hero */}
+      <div className="max-w-4xl mx-auto px-6 py-6">
+        <AdBanner slot="5678901234" format="horizontal" className="rounded-xl overflow-hidden" />
+      </div>
+
       {/* Articles Grid */}
       <section className="py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex gap-8">
+            {/* Main Content */}
+            <div className="flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredArticles.slice(1).map((article, index) => {
               const gradient = categoryGradients[article.category] || 'from-gray-500 to-gray-600'
               const icon = categoryIcons[article.category] || '📄'
@@ -362,9 +371,22 @@ export default function BlogPage() {
                 </Link>
               )
             })}
+              </div>
+            </div>
+
+            {/* Sidebar con anuncios - Solo desktop */}
+            <aside className="hidden xl:block w-80 shrink-0">
+              <AdSidebar slot="6789012345" className="mb-6" />
+              <AdSidebar slot="7890123456" />
+            </aside>
           </div>
         </div>
       </section>
+
+      {/* Ad antes del newsletter */}
+      <div className="max-w-4xl mx-auto px-6 py-6">
+        <AdBanner slot="8901234567" format="auto" className="rounded-xl overflow-hidden" />
+      </div>
 
       {/* Newsletter */}
       <section className="py-24 px-6">

@@ -12,6 +12,7 @@ import {
   SlackIcon, DiscordIcon, WhatsAppIcon, TelegramIcon, GoogleIcon,
   MicrosoftIcon, NotionIcon, ZapierIcon
 } from '@/components/icons/FeatureIcons'
+import { AdBanner } from '@/components/GoogleAdsense'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -502,6 +503,11 @@ export default function CaracteristicasPage() {
         </div>
       </section>
 
+      {/* Ad entre secciones */}
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <AdBanner slot="9012345678" format="auto" className="rounded-xl overflow-hidden" />
+      </div>
+
       {/* Comparison Table */}
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
@@ -633,6 +639,11 @@ export default function CaracteristicasPage() {
           </div>
         </div>
       </section>
+
+      {/* Ad antes del CTA */}
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <AdBanner slot="0123456789" format="horizontal" className="rounded-xl overflow-hidden" />
+      </div>
 
       {/* CTA Section */}
       <section className="py-24 px-6">

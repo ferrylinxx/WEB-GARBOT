@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NavbarGTA from '@/components/NavbarGTA'
 import FooterGTA from '@/components/FooterGTA'
 import Link from 'next/link'
+import { AdBanner } from '@/components/GoogleAdsense'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -444,6 +445,11 @@ export default function PreciosPage() {
           </div>
         </div>
       </section>
+
+      {/* Ad después de los planes */}
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <AdBanner slot="1122334455" format="auto" className="rounded-xl overflow-hidden" />
+      </div>
 
       {/* Features Section */}
       <section ref={featuresRef} className="py-24 px-6 relative">
