@@ -356,10 +356,10 @@ export default function RootLayout({
             }),
           }}
         />
+        <GoogleAdsense />
       </head>
       <body className={montserrat.className} suppressHydrationWarning>
         <GoogleAnalytics />
-        <GoogleAdsense />
         <SmoothScroll>
           {children}
         </SmoothScroll>
