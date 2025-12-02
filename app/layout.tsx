@@ -3,7 +3,7 @@ import { Montserrat } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import SmoothScroll from '@/components/SmoothScroll'
-import GoogleAdsense from '@/components/GoogleAdsense'
+import Script from 'next/script'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -356,7 +356,12 @@ export default function RootLayout({
             }),
           }}
         />
-        <GoogleAdsense />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6269718356198501"
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />
       </head>
       <body className={montserrat.className} suppressHydrationWarning>
         <GoogleAnalytics />
