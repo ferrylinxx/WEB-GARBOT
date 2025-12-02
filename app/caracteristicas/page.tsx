@@ -6,8 +6,39 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NavbarGTA from '@/components/NavbarGTA'
 import FooterGTA from '@/components/FooterGTA'
 import Link from 'next/link'
+import {
+  TextIcon, ImageIcon, VideoIcon, DocumentIcon, CodeIcon, SearchIcon,
+  ChartIcon, MicrophoneIcon, LockIcon, ShieldIcon, TrashIcon,
+  SlackIcon, DiscordIcon, WhatsAppIcon, TelegramIcon, GoogleIcon,
+  MicrosoftIcon, NotionIcon, ZapierIcon
+} from '@/components/icons/FeatureIcons'
 
-gsap.registerPlugin(ScrollTrigger)
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
+// Icon components map
+const iconComponents: Record<string, React.ComponentType<{ className?: string }>> = {
+  'text': TextIcon,
+  'image': ImageIcon,
+  'video': VideoIcon,
+  'document': DocumentIcon,
+  'code': CodeIcon,
+  'search': SearchIcon,
+  'chart': ChartIcon,
+  'microphone': MicrophoneIcon,
+}
+
+const integrationIconComponents: Record<string, React.ComponentType<{ className?: string }>> = {
+  'Slack': SlackIcon,
+  'Discord': DiscordIcon,
+  'WhatsApp': WhatsAppIcon,
+  'Telegram': TelegramIcon,
+  'Google': GoogleIcon,
+  'Microsoft': MicrosoftIcon,
+  'Notion': NotionIcon,
+  'Zapier': ZapierIcon,
+}
 
 export default function CaracteristicasPage() {
   const heroRef = useRef<HTMLDivElement>(null)
@@ -22,7 +53,7 @@ export default function CaracteristicasPage() {
   const features = [
     {
       id: 'text-generation',
-      icon: '✍️',
+      iconKey: 'text',
       title: "GarBotGPT-5.1",
       subtitle: "Generación de Texto",
       description: "Crea contenido de alta calidad en segundos con nuestro modelo más avanzado.",
@@ -32,7 +63,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'image-generation',
-      icon: '🎨',
+      iconKey: 'image',
       title: "GarBotGPT-5-mini",
       subtitle: "Generación de Imágenes",
       description: "Crea imágenes únicas y profesionales con IA a partir de descripciones.",
@@ -42,7 +73,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'video-generation',
-      icon: '🎬',
+      iconKey: 'video',
       title: "GarBotGPT-Video",
       subtitle: "Generación de Videos",
       description: "Crea videos cortos con IA para redes sociales y marketing.",
@@ -52,7 +83,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'document-analysis',
-      icon: '📄',
+      iconKey: 'document',
       title: "GarBotGPT-Docs",
       subtitle: "Análisis de Documentos",
       description: "Analiza PDFs, Word, Excel y extrae información clave automáticamente.",
@@ -62,7 +93,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'code-generation',
-      icon: '💻',
+      iconKey: 'code',
       title: "GarBotGPT-Code",
       subtitle: "Generación de Código",
       description: "Escribe, debuggea y optimiza código en múltiples lenguajes.",
@@ -72,7 +103,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'web-search',
-      icon: '🔍',
+      iconKey: 'search',
       title: "GarBotGPT-Search",
       subtitle: "Búsqueda Web en Tiempo Real",
       description: "Accede a información actualizada de internet para respuestas precisas.",
@@ -82,7 +113,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'data-analysis',
-      icon: '📊',
+      iconKey: 'chart',
       title: "GarBotGPT-Analytics",
       subtitle: "Análisis de Datos",
       description: "Procesa y analiza grandes volúmenes de datos para obtener insights.",
@@ -92,7 +123,7 @@ export default function CaracteristicasPage() {
     },
     {
       id: 'voice-transcription',
-      icon: '🎙️',
+      iconKey: 'microphone',
       title: "GarBotGPT-Voice",
       subtitle: "Transcripción de Voz",
       description: "Convierte audio a texto con alta precisión en múltiples idiomas.",
@@ -115,87 +146,202 @@ export default function CaracteristicasPage() {
   ]
 
   const integrations = [
-    { name: 'Slack', icon: '💬', color: 'bg-purple-500' },
-    { name: 'Discord', icon: '🎮', color: 'bg-indigo-500' },
-    { name: 'WhatsApp', icon: '📱', color: 'bg-green-500' },
-    { name: 'Telegram', icon: '✈️', color: 'bg-blue-500' },
-    { name: 'Google', icon: '🔍', color: 'bg-red-500' },
-    { name: 'Microsoft', icon: '🪟', color: 'bg-cyan-500' },
-    { name: 'Notion', icon: '📝', color: 'bg-gray-500' },
-    { name: 'Zapier', icon: '⚡', color: 'bg-orange-500' },
+    { name: 'Slack', color: 'bg-purple-500' },
+    { name: 'Discord', color: 'bg-indigo-500' },
+    { name: 'WhatsApp', color: 'bg-green-500' },
+    { name: 'Telegram', color: 'bg-blue-500' },
+    { name: 'Google', color: 'bg-red-500' },
+    { name: 'Microsoft', color: 'bg-cyan-500' },
+    { name: 'Notion', color: 'bg-gray-500' },
+    { name: 'Zapier', color: 'bg-orange-500' },
   ]
 
   const securityFeatures = [
-    { title: 'Encriptación E2E', description: 'Tus datos viajan seguros con cifrado de extremo a extremo', icon: '🔐' },
-    { title: 'GDPR Compliant', description: 'Cumplimos con todas las normativas europeas de protección de datos', icon: '🇪🇺' },
-    { title: 'Sin almacenamiento', description: 'No guardamos tus conversaciones ni datos sensibles', icon: '🗑️' },
-    { title: 'Auditorías regulares', description: 'Tests de seguridad periódicos por expertos externos', icon: '🛡️' },
+    { title: 'Encriptación E2E', description: 'Tus datos viajan seguros con cifrado de extremo a extremo', iconKey: 'lock' },
+    { title: 'GDPR Compliant', description: 'Cumplimos con todas las normativas europeas de protección de datos', iconKey: 'shield' },
+    { title: 'Sin almacenamiento', description: 'No guardamos tus conversaciones ni datos sensibles', iconKey: 'trash' },
+    { title: 'Auditorías regulares', description: 'Tests de seguridad periódicos por expertos externos', iconKey: 'shield' },
   ]
+
+  const securityIconComponents: Record<string, React.ComponentType<{ className?: string }>> = {
+    'lock': LockIcon,
+    'shield': ShieldIcon,
+    'trash': TrashIcon,
+  }
 
   const tabs = ['Todos', 'Texto', 'Imágenes', 'Código', 'Datos']
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animations
-      gsap.fromTo('.hero-badge',
-        { y: -30, opacity: 0, scale: 0.9 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.7)' }
-      )
-      gsap.fromTo(titleRef.current,
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, delay: 0.2, ease: 'power3.out' }
-      )
-      gsap.fromTo('.hero-subtitle',
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 0.4, ease: 'power3.out' }
-      )
+      // ===== HERO EPIC ENTRANCE =====
+      const heroTl = gsap.timeline()
 
-      // Features scroll animations
-      featuresRef.current.forEach((feature, i) => {
-        if (!feature) return
-        gsap.fromTo(feature,
-          { y: 100, opacity: 0, rotateX: -15, scale: 0.9 },
-          {
-            y: 0, opacity: 1, rotateX: 0, scale: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: feature, start: 'top 85%', toggleActions: 'play none none reverse' }
-          }
-        )
+      // Animated background particles
+      gsap.to('.hero-particle', {
+        y: 'random(-100, 100)',
+        x: 'random(-50, 50)',
+        rotation: 'random(-180, 180)',
+        duration: 'random(3, 6)',
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: { amount: 2, from: 'random' }
       })
 
-      // Comparison table animation
-      if (comparisonRef.current) {
-        gsap.fromTo(comparisonRef.current,
-          { y: 80, opacity: 0 },
+      // Badge with bounce and glow
+      heroTl.fromTo('.hero-badge',
+        { y: -50, opacity: 0, scale: 0.5, filter: 'blur(10px)' },
+        { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'elastic.out(1, 0.5)' }
+      )
+
+      // Title with split text effect simulation
+      heroTl.fromTo(titleRef.current,
+        { y: 150, opacity: 0, skewY: 7, scale: 0.8 },
+        { y: 0, opacity: 1, skewY: 0, scale: 1, duration: 1.4, ease: 'expo.out' },
+        '-=0.5'
+      )
+
+      // Subtitle with wave effect
+      heroTl.fromTo('.hero-subtitle',
+        { y: 80, opacity: 0, clipPath: 'inset(100% 0% 0% 0%)' },
+        { y: 0, opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 1, ease: 'power4.out' },
+        '-=0.8'
+      )
+
+      // Glowing orb animation
+      gsap.to('.hero-glow', {
+        scale: 1.3,
+        opacity: 0.6,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      })
+
+      // ===== FEATURES - 3D FLIP & REVEAL =====
+      featuresRef.current.forEach((feature, i) => {
+        if (!feature) return
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: feature,
+            start: 'top 85%',
+            end: 'top 20%',
+            toggleActions: 'play none none reverse'
+          }
+        })
+
+        tl.fromTo(feature,
           {
-            y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+            opacity: 0,
+            y: 120,
+            rotateX: -45,
+            rotateY: i % 2 === 0 ? -25 : 25,
+            scale: 0.7,
+            transformPerspective: 1000,
+            transformOrigin: 'center center'
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            rotateY: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: 'expo.out',
+            delay: i * 0.08
+          }
+        )
+
+        // Hover magnetic effect
+        feature.addEventListener('mouseenter', () => {
+          gsap.to(feature, {
+            scale: 1.05,
+            boxShadow: '0 25px 50px rgba(0,0,0,0.3)',
+            duration: 0.4,
+            ease: 'power2.out'
+          })
+        })
+        feature.addEventListener('mouseleave', () => {
+          gsap.to(feature, {
+            scale: 1,
+            boxShadow: '0 0 0 rgba(0,0,0,0)',
+            duration: 0.4,
+            ease: 'power2.out'
+          })
+        })
+      })
+
+      // ===== COMPARISON TABLE - STAGGERED REVEAL =====
+      if (comparisonRef.current) {
+        const tableRows = comparisonRef.current.querySelectorAll('tr')
+        gsap.fromTo(tableRows,
+          { x: -100, opacity: 0, scale: 0.9 },
+          {
+            x: 0, opacity: 1, scale: 1,
+            duration: 0.8,
+            stagger: 0.08,
+            ease: 'power3.out',
             scrollTrigger: { trigger: comparisonRef.current, start: 'top 80%', toggleActions: 'play none none reverse' }
           }
         )
-      }
 
-      // Integrations animation
-      if (integrationsRef.current) {
-        gsap.fromTo('.integration-item',
-          { y: 50, opacity: 0, scale: 0.8 },
+        // Checkmarks pop animation
+        const checkmarks = comparisonRef.current.querySelectorAll('.check-icon')
+        gsap.fromTo(checkmarks,
+          { scale: 0, rotation: -180 },
           {
-            y: 0, opacity: 1, scale: 1,
+            scale: 1, rotation: 0,
             duration: 0.6,
-            stagger: 0.1,
-            ease: 'back.out(1.7)',
-            scrollTrigger: { trigger: integrationsRef.current, start: 'top 80%', toggleActions: 'play none none reverse' }
+            stagger: 0.05,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: comparisonRef.current, start: 'top 70%', toggleActions: 'play none none reverse' }
           }
         )
       }
 
-      // Security animation
+      // ===== INTEGRATIONS - CIRCULAR EXPLOSION =====
+      if (integrationsRef.current) {
+        gsap.fromTo('.integration-item',
+          {
+            opacity: 0,
+            scale: 0,
+            rotation: -180
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: 0.8,
+            stagger: {
+              amount: 0.6,
+              from: 'center',
+              grid: 'auto',
+              ease: 'power2.inOut'
+            },
+            ease: 'elastic.out(1, 0.5)',
+            scrollTrigger: { trigger: integrationsRef.current, start: 'top 80%', toggleActions: 'play none none reverse' }
+          }
+        )
+
+        // Floating animation after reveal
+        gsap.to('.integration-item', {
+          y: 'random(-10, 10)',
+          duration: 'random(2, 3)',
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          stagger: { amount: 1, from: 'random' },
+          delay: 1
+        })
+      }
+
+      // ===== SECURITY - SLIDE & LOCK ANIMATION =====
       if (securityRef.current) {
         gsap.fromTo('.security-card',
-          { x: -80, opacity: 0 },
+          { x: -150, opacity: 0, rotateY: -30, scale: 0.8 },
           {
-            x: 0, opacity: 1,
-            duration: 0.8,
+            x: 0, opacity: 1, rotateY: 0, scale: 1,
+            duration: 1,
             stagger: 0.15,
             ease: 'power3.out',
             scrollTrigger: { trigger: securityRef.current, start: 'top 80%', toggleActions: 'play none none reverse' }
@@ -203,49 +349,88 @@ export default function CaracteristicasPage() {
         )
       }
 
-      // CTA animation
-      gsap.fromTo(ctaRef.current,
-        { y: 50, opacity: 0, scale: 0.95 },
-        {
-          y: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out',
+      // ===== CTA - EPIC FINALE =====
+      if (ctaRef.current) {
+        const ctaTl = gsap.timeline({
           scrollTrigger: { trigger: ctaRef.current, start: 'top 85%', toggleActions: 'play none none reverse' }
-        }
-      )
+        })
+
+        ctaTl.fromTo(ctaRef.current,
+          { y: 100, opacity: 0, scale: 0.8, rotateX: 20 },
+          { y: 0, opacity: 1, scale: 1, rotateX: 0, duration: 1.2, ease: 'expo.out' }
+        )
+        .fromTo('.cta-button',
+          { scale: 0.5, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(2)' },
+          '-=0.4'
+        )
+
+        // Pulsing glow effect on CTA
+        gsap.to('.cta-glow', {
+          scale: 1.5,
+          opacity: 0,
+          duration: 2,
+          repeat: -1,
+          ease: 'power2.out'
+        })
+      }
     }, heroRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black overflow-hidden">
       <NavbarGTA />
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[150px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[150px]" />
+      <section ref={heroRef} className="relative min-h-[80vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+        {/* Animated Background Particles - Fixed positions to avoid hydration mismatch */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[
+            { left: '10%', top: '15%' }, { left: '25%', top: '35%' }, { left: '40%', top: '20%' },
+            { left: '55%', top: '45%' }, { left: '70%', top: '25%' }, { left: '85%', top: '55%' },
+            { left: '15%', top: '65%' }, { left: '30%', top: '80%' }, { left: '45%', top: '70%' },
+            { left: '60%', top: '85%' }, { left: '75%', top: '60%' }, { left: '90%', top: '40%' },
+            { left: '5%', top: '50%' }, { left: '20%', top: '90%' }, { left: '35%', top: '10%' },
+            { left: '50%', top: '30%' }, { left: '65%', top: '75%' }, { left: '80%', top: '5%' },
+            { left: '95%', top: '70%' }, { left: '48%', top: '55%' }
+          ].map((pos, i) => (
+            <div
+              key={i}
+              className="hero-particle absolute w-2 h-2 bg-blue-500/30 rounded-full"
+              style={pos}
+            />
+          ))}
         </div>
 
-        {/* Grid */}
-        <div className="absolute inset-0 opacity-20"
+        {/* Glowing Orbs */}
+        <div className="absolute inset-0">
+          <div className="hero-glow absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[180px]" />
+          <div className="hero-glow absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[150px]" style={{ animationDelay: '1s' }} />
+          <div className="hero-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-600/15 rounded-full blur-[120px]" style={{ animationDelay: '2s' }} />
+        </div>
+
+        {/* Animated Grid */}
+        <div className="absolute inset-0 opacity-30"
           style={{
-            backgroundImage: 'linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px'
+            backgroundImage: 'linear-gradient(rgba(59,130,246,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.15) 1px, transparent 1px)',
+            backgroundSize: '50px 50px'
           }}
         />
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-block mb-6">
-            <span className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full text-sm font-semibold text-blue-400 border border-blue-500/30">
+          <div className="hero-badge inline-block mb-8">
+            <span className="px-6 py-3 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full text-sm font-bold text-blue-400 border border-blue-500/40 shadow-lg shadow-blue-500/20 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
               8 Modelos Especializados
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             </span>
           </div>
-          <h1 ref={titleRef} className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 text-white">
-            Poder <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Ilimitado</span>
+          <h1 ref={titleRef} className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 text-white">
+            Poder <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">Ilimitado</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/60 max-w-3xl mx-auto font-normal leading-relaxed">
+          <p className="hero-subtitle text-xl md:text-2xl text-white/60 max-w-3xl mx-auto font-normal leading-relaxed">
             Cada modelo diseñado para una tarea específica. Máximo rendimiento garantizado.
           </p>
         </div>
@@ -276,7 +461,11 @@ export default function CaracteristicasPage() {
                   <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-3xl`} />
 
                   {/* Icon */}
-                  <div className="text-5xl mb-4">{feature.icon}</div>
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 shadow-lg`}>
+                    {iconComponents[feature.iconKey] &&
+                      (() => { const Icon = iconComponents[feature.iconKey]; return <Icon className="w-8 h-8 text-white" />; })()
+                    }
+                  </div>
 
                   {/* Stats badge */}
                   <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-gradient-to-r ${feature.color} text-white`}>
@@ -391,17 +580,20 @@ export default function CaracteristicasPage() {
           </div>
 
           <div ref={integrationsRef} className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {integrations.map((integration, i) => (
-              <div
-                key={integration.name}
-                className="integration-item group p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer text-center"
-              >
-                <div className={`w-16 h-16 ${integration.color} rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                  {integration.icon}
+            {integrations.map((integration) => {
+              const IntIcon = integrationIconComponents[integration.name]
+              return (
+                <div
+                  key={integration.name}
+                  className="integration-item group p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer text-center"
+                >
+                  <div className={`w-16 h-16 ${integration.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                    {IntIcon && <IntIcon className="w-8 h-8 text-white" />}
+                  </div>
+                  <h3 className="text-white font-bold">{integration.name}</h3>
                 </div>
-                <h3 className="text-white font-bold">{integration.name}</h3>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -419,22 +611,25 @@ export default function CaracteristicasPage() {
           </div>
 
           <div ref={securityRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {securityFeatures.map((item, i) => (
-              <div
-                key={item.title}
-                className="security-card group p-8 rounded-3xl border border-white/10 bg-white/5 hover:border-amber-500/30 transition-all duration-300"
-              >
-                <div className="flex items-start gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                    <p className="text-white/50">{item.description}</p>
+            {securityFeatures.map((item) => {
+              const SecIcon = securityIconComponents[item.iconKey]
+              return (
+                <div
+                  key={item.title}
+                  className="security-card group p-8 rounded-3xl border border-white/10 bg-white/5 hover:border-amber-500/30 transition-all duration-300"
+                >
+                  <div className="flex items-start gap-6">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      {SecIcon && <SecIcon className="w-7 h-7 text-white" />}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                      <p className="text-white/50">{item.description}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>

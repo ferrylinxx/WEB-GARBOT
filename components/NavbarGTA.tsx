@@ -78,10 +78,10 @@ const navLinks = [
 ]
 
 const moreLinks = [
-  { name: 'Scroll FX', href: '/scroll', icon: 'scroll', description: 'Efectos de scroll increíbles' },
   { name: 'Blog', href: '/blog', icon: 'blog', description: 'Últimas noticias y tutoriales' },
   { name: 'Documentación', href: '/docs', icon: 'docs', description: 'Guías y API reference' },
   { name: 'Changelog', href: '/changelog', icon: 'changelog', description: 'Historial de versiones' },
+  { name: 'Sobre mí', href: '/sobre-nosotros', icon: 'home', description: 'Conoce al creador' },
 ]
 
 export default function NavbarGTA() {
@@ -290,19 +290,8 @@ export default function NavbarGTA() {
               </div>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Button */}
             <div className="hidden md:flex items-center gap-3">
-              <Link
-                href="/scroll"
-                className="group relative px-4 py-2.5 rounded-xl text-white/80 hover:text-white font-medium text-sm transition-all duration-300 overflow-hidden"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative flex items-center gap-2">
-                  {Icons.scroll}
-                  <span>Ver Efectos</span>
-                </span>
-              </Link>
-
               <a
                 href="https://ia.garbotgpt.com"
                 target="_blank"

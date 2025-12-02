@@ -118,65 +118,160 @@ export default function DemoPage() {
     if (!isClient) return
 
     const ctx = gsap.context(() => {
-      // Hero animations
-      gsap.fromTo('.demo-hero-badge',
-        { y: -30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.7)' }
-      )
-      gsap.fromTo('.demo-hero-title',
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 0.2, ease: 'power3.out' }
-      )
-      gsap.fromTo('.demo-hero-subtitle',
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, delay: 0.4, ease: 'power3.out' }
+      // ===== HERO CINEMATIC ENTRANCE =====
+      const heroTimeline = gsap.timeline()
+
+      // Floating particles in background
+      gsap.to('.demo-particle', {
+        y: 'random(-80, 80)',
+        x: 'random(-40, 40)',
+        rotation: 'random(-90, 90)',
+        scale: 'random(0.5, 1.5)',
+        duration: 'random(4, 8)',
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: { amount: 3, from: 'random' }
+      })
+
+      // Badge with glitch effect
+      heroTimeline.fromTo('.demo-hero-badge',
+        { y: -60, opacity: 0, scale: 0.3, filter: 'blur(20px)' },
+        { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'elastic.out(1, 0.6)' }
       )
 
-      // Capabilities cards
+      // Title with dramatic reveal
+      heroTimeline.fromTo('.demo-hero-title',
+        { y: 120, opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', skewY: 5 },
+        { y: 0, opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', skewY: 0, duration: 1.2, ease: 'expo.out' },
+        '-=0.6'
+      )
+
+      // Subtitle sliding in
+      heroTimeline.fromTo('.demo-hero-subtitle',
+        { y: 60, opacity: 0, letterSpacing: '10px' },
+        { y: 0, opacity: 1, letterSpacing: 'normal', duration: 1, ease: 'power4.out' },
+        '-=0.7'
+      )
+
+      // Pulsing glow orbs
+      gsap.to('.demo-glow-orb', {
+        scale: 1.4,
+        opacity: 0.5,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: 0.5
+      })
+
+      // ===== CAPABILITIES - 3D CARD FLIP =====
       capabilitiesRef.current.forEach((card, i) => {
         if (!card) return
-        gsap.fromTo(card,
-          { y: 100, opacity: 0, rotateY: -15, scale: 0.9 },
-          {
-            y: 0, opacity: 1, rotateY: 0, scale: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse'
-            }
+
+        const flipTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
           }
+        })
+
+        // Epic 3D flip entrance
+        flipTl.fromTo(card,
+          {
+            opacity: 0,
+            y: 150,
+            rotateX: -60,
+            rotateY: i % 2 === 0 ? -30 : 30,
+            rotateZ: i % 2 === 0 ? -5 : 5,
+            scale: 0.6,
+            transformPerspective: 1200,
+            filter: 'blur(10px)'
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 1.4,
+            ease: 'expo.out',
+            delay: i * 0.12
+          }
+        )
+
+        // Inner elements stagger
+        const innerElements = card.querySelectorAll('h3, p, span')
+        flipTl.fromTo(innerElements,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' },
+          '-=0.6'
         )
       })
 
-      // Stats counter animation
+      // ===== STATS - COUNTER ANIMATION =====
       if (statsRef.current) {
-        gsap.fromTo('.stat-item',
-          { y: 50, opacity: 0 },
-          {
-            y: 0, opacity: 1,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: statsRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse'
-            }
+        const statsTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
           }
+        })
+
+        // Container reveal
+        statsTl.fromTo(statsRef.current,
+          { opacity: 0, y: 50, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out' }
+        )
+
+        // Stats items with bounce
+        statsTl.fromTo('.stat-item',
+          { y: 80, opacity: 0, scale: 0.5, rotateZ: -10 },
+          {
+            y: 0, opacity: 1, scale: 1, rotateZ: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: 'back.out(1.7)'
+          },
+          '-=0.4'
+        )
+
+        // Value pop effect
+        statsTl.fromTo('.stat-value',
+          { scale: 1.3, color: '#22d3ee' },
+          { scale: 1, color: '#ffffff', duration: 0.4, stagger: 0.1, ease: 'power2.out' },
+          '-=0.3'
         )
       }
 
-      // Use cases
+      // ===== USE CASES - WAVE REVEAL =====
       useCasesRef.current.forEach((card, i) => {
         if (!card) return
+
+        const row = Math.floor(i / 3)
+        const col = i % 3
+
         gsap.fromTo(card,
-          { x: i % 2 === 0 ? -80 : 80, opacity: 0, scale: 0.95 },
           {
-            x: 0, opacity: 1, scale: 1,
-            duration: 0.8,
-            ease: 'power3.out',
+            x: (col - 1) * 100,
+            y: 80,
+            opacity: 0,
+            scale: 0.8,
+            rotateY: (col - 1) * 15
+          },
+          {
+            x: 0,
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotateY: 0,
+            duration: 1,
+            ease: 'expo.out',
+            delay: row * 0.1 + col * 0.08,
             scrollTrigger: {
               trigger: card,
               start: 'top 85%',
@@ -186,21 +281,37 @@ export default function DemoPage() {
         )
       })
 
-      // CTA
+      // ===== CTA - GRAND FINALE =====
       if (ctaRef.current) {
-        gsap.fromTo(ctaRef.current,
-          { y: 60, opacity: 0, scale: 0.95 },
-          {
-            y: 0, opacity: 1, scale: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ctaRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse'
-            }
+        const ctaTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ctaRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
           }
+        })
+
+        // Zoom in with rotation
+        ctaTl.fromTo(ctaRef.current,
+          { y: 100, opacity: 0, scale: 0.7, rotateX: 30 },
+          { y: 0, opacity: 1, scale: 1, rotateX: 0, duration: 1.2, ease: 'expo.out' }
         )
+
+        // Buttons pop in
+        ctaTl.fromTo('.cta-button',
+          { scale: 0, opacity: 0, y: 20 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'back.out(2)' },
+          '-=0.5'
+        )
+
+        // Pulsing effect
+        gsap.to('.cta-pulse', {
+          scale: 1.2,
+          opacity: 0,
+          duration: 1.5,
+          repeat: -1,
+          ease: 'power2.out'
+        })
       }
     })
 
@@ -213,29 +324,47 @@ export default function DemoPage() {
 
       {/* Hero Section */}
       <section ref={heroRef} className="pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[150px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[200px]" />
+        {/* Floating Particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="demo-particle absolute w-1 h-1 bg-cyan-400/40 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+            />
+          ))}
         </div>
 
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-20"
+        {/* Glowing Orbs */}
+        <div className="absolute inset-0">
+          <div className="demo-glow-orb absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cyan-500/15 rounded-full blur-[180px]" />
+          <div className="demo-glow-orb absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/15 rounded-full blur-[150px]" />
+          <div className="demo-glow-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-purple-500/10 rounded-full blur-[200px]" />
+        </div>
+
+        {/* Animated Grid */}
+        <div className="absolute inset-0 opacity-25"
           style={{
-            backgroundImage: 'linear-gradient(rgba(6,182,212,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.1) 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
+            backgroundImage: 'linear-gradient(rgba(6,182,212,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.15) 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
           }}
         />
 
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
-          <div className="demo-hero-badge inline-block mb-6">
-            <span className="px-6 py-2.5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full text-sm font-bold text-cyan-400 border border-cyan-500/30 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <div className="demo-hero-badge inline-block mb-8">
+            <span className="px-8 py-3 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full text-sm font-bold text-cyan-400 border border-cyan-500/40 shadow-lg shadow-cyan-500/20 flex items-center gap-3">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
               Prueba en Vivo • 5 Mensajes Gratis
             </span>
           </div>
-          <h1 className="demo-hero-title text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6">
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="demo-hero-title text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8">
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
               Demo Interactiva
             </span>
           </h1>

@@ -109,95 +109,222 @@ export default function PreciosPage() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animations
-      gsap.fromTo('.pricing-badge',
-        { y: -30, opacity: 0, scale: 0.9 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.7)' }
-      )
-      gsap.fromTo('.pricing-title',
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 0.2, ease: 'power3.out' }
-      )
-      gsap.fromTo('.pricing-toggle',
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, delay: 0.4, ease: 'power3.out' }
+      // ===== HERO SPECTACULAR ENTRANCE =====
+      const heroTl = gsap.timeline()
+
+      // Floating money/coin particles
+      gsap.to('.pricing-particle', {
+        y: 'random(-100, 100)',
+        x: 'random(-60, 60)',
+        rotation: 'random(-360, 360)',
+        scale: 'random(0.5, 1.5)',
+        duration: 'random(4, 7)',
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: { amount: 2.5, from: 'random' }
+      })
+
+      // Pulsing glow orbs
+      gsap.to('.pricing-glow', {
+        scale: 1.3,
+        opacity: 0.5,
+        duration: 3.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: 0.8
+      })
+
+      // Badge elastic entrance
+      heroTl.fromTo('.pricing-badge',
+        { y: -80, opacity: 0, scale: 0.3, filter: 'blur(15px)' },
+        { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: 'elastic.out(1, 0.5)' }
       )
 
-      // Cards stagger animation
+      // Title with dramatic reveal
+      heroTl.fromTo('.pricing-title',
+        { y: 100, opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', scale: 0.9 },
+        { y: 0, opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.2, ease: 'expo.out' },
+        '-=0.7'
+      )
+
+      // Toggle with bounce
+      heroTl.fromTo('.pricing-toggle',
+        { y: 60, opacity: 0, scale: 0.8 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.7)' },
+        '-=0.5'
+      )
+
+      // ===== PRICING CARDS - 3D FLIP REVEAL =====
       cardsRef.current.forEach((card, i) => {
         if (!card) return
-        gsap.fromTo(card,
-          { y: 100, opacity: 0, rotateY: i === 1 ? 0 : (i === 0 ? 10 : -10), scale: 0.9 },
+
+        const cardTl = gsap.timeline({
+          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' }
+        })
+
+        // Epic 3D entrance with perspective
+        cardTl.fromTo(card,
           {
-            y: 0, opacity: 1, rotateY: 0, scale: 1,
-            duration: 1, delay: i * 0.15,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' }
+            y: 150,
+            opacity: 0,
+            rotateX: -45,
+            rotateY: i === 0 ? -20 : (i === 2 ? 20 : 0),
+            scale: 0.7,
+            transformPerspective: 1000,
+            filter: 'blur(8px)'
+          },
+          {
+            y: 0,
+            opacity: 1,
+            rotateX: 0,
+            rotateY: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 1.3,
+            delay: i * 0.2,
+            ease: 'expo.out'
           }
+        )
+
+        // Popular card special glow
+        if (i === 1) {
+          gsap.to(card.querySelector('.popular-glow'), {
+            boxShadow: '0 0 60px rgba(59,130,246,0.5), 0 0 100px rgba(59,130,246,0.3)',
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          })
+        }
+
+        // Features stagger in
+        const featureItems = card.querySelectorAll('li')
+        cardTl.fromTo(featureItems,
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power2.out' },
+          '-=0.6'
         )
       })
 
-      // Features animation
+      // ===== FEATURES - CIRCULAR EXPLOSION =====
       if (featuresRef.current) {
         gsap.fromTo('.feature-box',
-          { y: 40, opacity: 0 },
           {
-            y: 0, opacity: 1,
-            duration: 0.6, stagger: 0.1,
-            ease: 'power3.out',
+            y: 80,
+            opacity: 0,
+            scale: 0,
+            rotation: -15
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: 0.8,
+            stagger: {
+              amount: 0.5,
+              from: 'center',
+              ease: 'power2.out'
+            },
+            ease: 'elastic.out(1, 0.6)',
             scrollTrigger: { trigger: featuresRef.current, start: 'top 85%', toggleActions: 'play none none reverse' }
           }
         )
+
+        // Hover float effect
+        gsap.to('.feature-box', {
+          y: 'random(-5, 5)',
+          duration: 'random(2, 3)',
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          stagger: { amount: 1, from: 'random' },
+          delay: 1
+        })
       }
 
-      // Testimonials animation
+      // ===== TESTIMONIALS - WAVE REVEAL =====
       if (testimonialsRef.current) {
         gsap.fromTo('.testimonial-card',
-          { x: -60, opacity: 0, scale: 0.95 },
           {
-            x: 0, opacity: 1, scale: 1,
-            duration: 0.8, stagger: 0.15,
-            ease: 'power3.out',
+            x: -100,
+            opacity: 0,
+            scale: 0.85,
+            rotateY: -25
+          },
+          {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            rotateY: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'expo.out',
             scrollTrigger: { trigger: testimonialsRef.current, start: 'top 80%', toggleActions: 'play none none reverse' }
           }
         )
       }
 
-      // FAQ animation
-      gsap.fromTo(faqRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: faqRef.current, start: 'top 85%', toggleActions: 'play none none reverse' }
-        }
-      )
+      // ===== FAQ - ACCORDION REVEAL =====
+      if (faqRef.current) {
+        const faqItems = faqRef.current.querySelectorAll('details')
+        gsap.fromTo(faqItems,
+          { y: 50, opacity: 0, x: -30 },
+          {
+            y: 0, opacity: 1, x: 0,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: faqRef.current, start: 'top 85%', toggleActions: 'play none none reverse' }
+          }
+        )
+      }
     }, heroRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black overflow-hidden">
       <NavbarGTA />
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-green-600/20 rounded-full blur-[180px] animate-pulse" />
-          <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[200px]" />
+      <section ref={heroRef} className="relative min-h-[80vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+        {/* Floating Particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="pricing-particle absolute text-2xl"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+            >
+              {['💰', '✨', '🎁', '💎', '⭐'][i % 5]}
+            </div>
+          ))}
         </div>
 
-        <div className="absolute inset-0 opacity-20"
+        {/* Glowing Orbs */}
+        <div className="absolute inset-0">
+          <div className="pricing-glow absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-green-600/20 rounded-full blur-[180px]" />
+          <div className="pricing-glow absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[150px]" />
+          <div className="pricing-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-emerald-500/10 rounded-full blur-[200px]" />
+        </div>
+
+        <div className="absolute inset-0 opacity-25"
           style={{
-            backgroundImage: 'linear-gradient(rgba(34,197,94,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.1) 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
+            backgroundImage: 'linear-gradient(rgba(34,197,94,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.15) 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
           }}
         />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="pricing-badge inline-block mb-6">
-            <span className="px-6 py-2.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full text-sm font-bold text-green-400 border border-green-500/30 flex items-center gap-2">
+          <div className="pricing-badge inline-block mb-8">
+            <span className="px-8 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full text-sm font-bold text-green-400 border border-green-500/40 shadow-lg shadow-green-500/20 flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               100% GRATIS PARA SIEMPRE
             </span>
@@ -271,16 +398,29 @@ export default function PreciosPage() {
                     ) : plan.price === 'Custom' ? (
                       <span className="text-4xl font-black text-white">Personalizado</span>
                     ) : (
-                      <span className="text-3xl font-bold text-white">{plan.price}</span>
+                      <div>
+                        <span className="text-5xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                          €{billingPeriod === 'monthly' ? plan.price : plan.priceYearly}
+                        </span>
+                        <span className="text-white/50 text-sm">/{billingPeriod === 'monthly' ? 'mes' : 'año'}</span>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 mb-8 relative z-10">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center gap-3">
-                      <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${plan.color}`} />
-                      <span className="text-white/70 text-sm">{feature}</span>
+                      {feature.included ? (
+                        <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      )}
+                      <span className={`text-sm ${feature.included ? 'text-white/70' : 'text-white/30'}`}>{feature.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -289,7 +429,7 @@ export default function PreciosPage() {
                   href={plan.link}
                   target={plan.link.startsWith('http') ? '_blank' : undefined}
                   rel={plan.link.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className={`block w-full py-3 px-6 rounded-full text-center font-bold transition-all hover:scale-105 ${
+                  className={`relative z-10 block w-full py-4 px-6 rounded-full text-center font-bold transition-all hover:scale-105 ${
                     plan.popular
                       ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30'
                       : plan.price === '0'
@@ -305,11 +445,61 @@ export default function PreciosPage() {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section ref={featuresRef} className="py-24 px-6 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent" />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
+              Incluido en <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">todos los planes</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {features.map((feature) => (
+              <div key={feature.title} className="feature-box text-center p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-green-500/30 transition-all">
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="text-white font-bold mb-2">{feature.title}</h3>
+                <p className="text-white/50 text-sm">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section ref={testimonialsRef} className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-sm font-bold text-purple-400 border border-purple-500/30">
+              Testimonios
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mt-6 mb-4 text-white">
+              Lo que dicen nuestros <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">usuarios</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial) => (
+              <div key={testimonial.name} className="testimonial-card p-8 rounded-3xl border border-white/10 bg-white/5">
+                <div className="text-5xl mb-4">{testimonial.avatar}</div>
+                <p className="text-white/70 mb-6 italic">&ldquo;{testimonial.quote}&rdquo;</p>
+                <div>
+                  <p className="text-white font-bold">{testimonial.name}</p>
+                  <p className="text-white/40 text-sm">{testimonial.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
-      <section ref={faqRef} className="py-20 px-6">
+      <section ref={faqRef} className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-white">
+            <span className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full text-sm font-bold text-blue-400 border border-blue-500/30">
+              FAQ
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mt-6 mb-4 text-white">
               Preguntas <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Frecuentes</span>
             </h2>
           </div>
@@ -318,7 +508,7 @@ export default function PreciosPage() {
             {faqs.map((faq, index) => (
               <details
                 key={index}
-                className="group cursor-pointer rounded-2xl p-6 transition-all"
+                className="group cursor-pointer rounded-2xl p-6 transition-all hover:border-blue-500/30"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                   border: '1px solid rgba(255,255,255,0.1)'
@@ -340,33 +530,42 @@ export default function PreciosPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="relative p-12 rounded-3xl text-center overflow-hidden"
+          <div className="relative p-12 md:p-16 rounded-3xl text-center overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+              background: 'linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(16,185,129,0.1) 100%)',
               border: '1px solid rgba(255,255,255,0.1)'
             }}
           >
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-gradient-to-r from-green-600/30 to-emerald-500/30 blur-[100px]" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-gradient-to-r from-green-600/30 to-emerald-500/30 blur-[120px]" />
 
             <div className="relative z-10">
+              <div className="text-6xl mb-6">🎉</div>
               <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">
                 ¿Listo para <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">comenzar</span>?
               </h2>
               <p className="text-xl text-white/60 mb-8 max-w-2xl mx-auto">
-                Únete a miles de usuarios transformando su trabajo con IA
+                Únete a miles de usuarios transformando su trabajo con IA. 100% gratis.
               </p>
-              <a
-                href="https://ia.garbotgpt.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold rounded-full hover:scale-105 transition-transform shadow-lg shadow-green-500/30"
-              >
-                Comenzar Gratis Ahora
-              </a>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="https://ia.garbotgpt.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-10 py-4 bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-lg rounded-full hover:scale-105 transition-transform shadow-lg shadow-green-500/30"
+                >
+                  Comenzar Gratis Ahora
+                </a>
+                <Link
+                  href="/demo"
+                  className="px-10 py-4 bg-white/10 border border-white/20 text-white font-bold text-lg rounded-full hover:bg-white/20 transition-all"
+                >
+                  Probar Demo
+                </Link>
+              </div>
               <p className="mt-6 text-sm text-white/40">
-                Sin tarjeta de crédito • Acceso instantáneo
+                Sin tarjeta de crédito • Acceso instantáneo • Cancela cuando quieras
               </p>
             </div>
           </div>
