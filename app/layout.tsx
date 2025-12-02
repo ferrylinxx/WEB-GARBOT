@@ -3,7 +3,7 @@ import { Montserrat } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import SmoothScroll from '@/components/SmoothScroll'
-import { GoogleAdsenseScript } from '@/components/GoogleAdsense'
+import GoogleAdsense from '@/components/GoogleAdsense'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -359,7 +359,7 @@ export default function RootLayout({
       </head>
       <body className={montserrat.className} suppressHydrationWarning>
         <GoogleAnalytics />
-        <GoogleAdsenseScript />
+        <GoogleAdsense />
         <SmoothScroll>
           {children}
         </SmoothScroll>
