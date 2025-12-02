@@ -39,9 +39,17 @@ function saveLimits(limits: Record<string, { count: number; resetTime: number; f
   }
 }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+// Lazy initialization para evitar errores durante el build
+let openaiInstance: OpenAI | null = null
+
+function getOpenAI(): OpenAI {
+  if (!openaiInstance) {
+    openaiInstance = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build'
+    })
+  }
+  return openaiInstance
+}
 
 function getClientIP(request: NextRequest): string {
   // Múltiples fuentes de IP para mayor precisión
@@ -169,6 +177,8 @@ export async function POST(request: NextRequest) {
 
     let response: string
     let imageUrl: string | undefined
+
+    const openai = getOpenAI()
 
     switch (type) {
       case 'image':
