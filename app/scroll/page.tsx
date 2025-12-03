@@ -5,9 +5,22 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Link from 'next/link'
 
+const categories = [
+  { id: 'all', name: 'Todos', icon: '🎯', range: '1-97' },
+  { id: 'basic', name: 'Básicos', icon: '🌟', range: '1-20' },
+  { id: 'intermediate', name: 'Intermedios', icon: '⚡', range: '21-37' },
+  { id: 'advanced', name: 'Avanzados', icon: '🚀', range: '38-57' },
+  { id: 'shaders', name: 'Shaders', icon: '🌊', range: '58-67' },
+  { id: 'cinematic', name: 'Cinematográfico', icon: '🎬', range: '68-77' },
+  { id: '3d', name: '3D Extremo', icon: '🔮', range: '78-87' },
+  { id: 'particles', name: 'Partículas', icon: '✨', range: '88-92' },
+  { id: 'typography', name: 'Tipografía', icon: '📝', range: '93-97' },
+]
+
 export default function ScrollEffectsPage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isClient, setIsClient] = useState(false)
+  const [activeCategory, setActiveCategory] = useState('all')
 
   useEffect(() => {
     setIsClient(true)
@@ -34,10 +47,25 @@ export default function ScrollEffectsPage() {
           { y: 50, opacity: 0 },
           { y: 0, opacity: 1, duration: 1, delay: 0.3 }
         )
+        gsap.fromTo('.hero-categories',
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, delay: 0.5 }
+        )
         gsap.fromTo('.hero-cta',
           { scale: 0, opacity: 0 },
           { scale: 1, opacity: 1, duration: 0.8, delay: 0.6, ease: 'back.out(1.7)' }
         )
+
+        // Floating nav visibility
+        const floatingNav = document.getElementById('floating-nav')
+        if (floatingNav) {
+          ScrollTrigger.create({
+            trigger: '#start',
+            start: 'top 80%',
+            onEnter: () => { floatingNav.style.opacity = '1'; floatingNav.style.pointerEvents = 'auto' },
+            onLeaveBack: () => { floatingNav.style.opacity = '0'; floatingNav.style.pointerEvents = 'none' }
+          })
+        }
 
         // Floating particles
         document.querySelectorAll('.particle').forEach((el) => {
@@ -862,6 +890,365 @@ export default function ScrollEffectsPage() {
           scrollTrigger: { trigger: '.section-infinite-tunnel', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
         })
 
+        // ============== SHADERS CATEGORY (58-67) ==============
+
+        // Section 58: Liquid Distortion
+        gsap.to('.liquid-distort', {
+          '--distort': 20,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-liquid', start: 'top center', end: 'bottom center', scrub: 1 }
+        })
+
+        // Section 59: RGB Split / Chromatic Aberration
+        let rgbSetter = gsap.quickTo('.rgb-split', '--split', { duration: 0.2 })
+        ScrollTrigger.create({
+          trigger: '.section-rgb-split',
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            const velocity = Math.abs(self.getVelocity())
+            rgbSetter(gsap.utils.clamp(0, 15, velocity / 200))
+          }
+        })
+
+        // Section 60: Noise Displacement
+        gsap.fromTo('.noise-displace',
+          { '--noise': 50 },
+          { '--noise': 0, ease: 'power2.out',
+            scrollTrigger: { trigger: '.section-noise', start: 'top 60%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 61: Metaball Fusion
+        gsap.to('.metaball', {
+          x: (i) => (i % 2 === 0 ? 100 : -100),
+          stagger: 0.1,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-metaball', start: 'top center', end: 'bottom center', scrub: 1 }
+        })
+
+        // Section 62: Heat Wave
+        gsap.fromTo('.heat-wave',
+          { '--wave': 0 },
+          { '--wave': 30, ease: 'none',
+            scrollTrigger: { trigger: '.section-heat', start: 'top center', end: 'bottom center', scrub: 1 }
+          }
+        )
+
+        // Section 63: Glitch Shader
+        ScrollTrigger.create({
+          trigger: '.section-glitch-shader',
+          start: 'top 60%',
+          end: 'bottom 40%',
+          onEnter: () => document.querySelector('.glitch-shader')?.classList.add('glitching'),
+          onLeave: () => document.querySelector('.glitch-shader')?.classList.remove('glitching'),
+          onEnterBack: () => document.querySelector('.glitch-shader')?.classList.add('glitching'),
+          onLeaveBack: () => document.querySelector('.glitch-shader')?.classList.remove('glitching')
+        })
+
+        // Section 64: Pixelation Effect
+        gsap.fromTo('.pixelate',
+          { '--pixels': 2 },
+          { '--pixels': 100, ease: 'steps(20)',
+            scrollTrigger: { trigger: '.section-pixelate', start: 'top 60%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 65: Halftone Effect
+        gsap.fromTo('.halftone',
+          { '--dot-size': 20 },
+          { '--dot-size': 2, ease: 'none',
+            scrollTrigger: { trigger: '.section-halftone', start: 'top 60%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 66: Duotone Shift
+        gsap.to('.duotone', {
+          '--hue': 180,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-duotone', start: 'top bottom', end: 'bottom top', scrub: 1 }
+        })
+
+        // Section 67: Scan Lines
+        gsap.fromTo('.scanlines',
+          { '--scan-pos': '0%' },
+          { '--scan-pos': '100%', ease: 'none',
+            scrollTrigger: { trigger: '.section-scanlines', start: 'top center', end: 'bottom center', scrub: 1 }
+          }
+        )
+
+        // ============== CINEMATIC CATEGORY (68-77) ==============
+
+        // Section 68: Dolly Zoom (Vertigo Effect)
+        const dollyTl = gsap.timeline({
+          scrollTrigger: { trigger: '.section-dolly', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+        dollyTl.to('.dolly-bg', { scale: 2, ease: 'none' }, 0)
+        dollyTl.to('.dolly-subject', { scale: 0.5, ease: 'none' }, 0)
+
+        // Section 69: Rack Focus
+        const rackTl = gsap.timeline({
+          scrollTrigger: { trigger: '.section-rack-focus', start: 'top center', end: 'bottom center', scrub: 1 }
+        })
+        rackTl.to('.rack-front', { filter: 'blur(10px)', scale: 1.1 }, 0)
+        rackTl.to('.rack-back', { filter: 'blur(0px)', scale: 1 }, 0)
+
+        // Section 70: Ken Burns Parallax
+        gsap.utils.toArray('.ken-layer').forEach((layer, i) => {
+          gsap.to(layer as HTMLElement, {
+            y: -100 * (i + 1),
+            scale: 1 + (i * 0.1),
+            ease: 'none',
+            scrollTrigger: { trigger: '.section-ken-burns', start: 'top bottom', end: 'bottom top', scrub: 1 }
+          })
+        })
+
+        // Section 71: Match Cut
+        const matchTl = gsap.timeline({
+          scrollTrigger: { trigger: '.section-match-cut', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+        matchTl.to('.match-a', { scale: 0.5, opacity: 0, rotation: 180 }, 0)
+        matchTl.from('.match-b', { scale: 2, opacity: 0, rotation: -180 }, 0)
+
+        // Section 72: First Person Camera
+        gsap.to('.first-person', {
+          rotateX: 5,
+          rotateY: (i) => Math.sin(i) * 3,
+          y: 'random(-10, 10)',
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.section-first-person', start: 'top bottom', end: 'bottom top', scrub: 1 }
+        })
+
+        // Section 73: Letterbox Cinematic
+        gsap.fromTo('.letterbox',
+          { scaleY: 0 },
+          { scaleY: 1, ease: 'power2.inOut',
+            scrollTrigger: { trigger: '.section-letterbox', start: 'top 60%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 74: Film Grain
+        ScrollTrigger.create({
+          trigger: '.section-film-grain',
+          start: 'top center',
+          end: 'bottom center',
+          onEnter: () => document.querySelector('.film-grain')?.classList.add('active'),
+          onLeave: () => document.querySelector('.film-grain')?.classList.remove('active'),
+          onEnterBack: () => document.querySelector('.film-grain')?.classList.add('active'),
+          onLeaveBack: () => document.querySelector('.film-grain')?.classList.remove('active')
+        })
+
+        // Section 75: VHS Effect
+        gsap.to('.vhs-effect', {
+          '--tracking': 10,
+          ease: 'steps(5)',
+          scrollTrigger: { trigger: '.section-vhs', start: 'top center', end: 'bottom center', scrub: 1 }
+        })
+
+        // Section 76: Slow Motion Reveal
+        const slowMoTl = gsap.timeline({
+          scrollTrigger: { trigger: '.section-slow-mo', start: 'top top', end: 'bottom bottom', scrub: 2, pin: true }
+        })
+        slowMoTl.from('.slow-mo-element', { y: 200, opacity: 0, stagger: 0.5 })
+
+        // Section 77: Whip Pan Transition
+        gsap.fromTo('.whip-pan',
+          { x: '-100vw', rotation: -10 },
+          { x: '0vw', rotation: 0, ease: 'power4.out',
+            scrollTrigger: { trigger: '.section-whip-pan', start: 'top 80%', end: 'top 20%', scrub: 1 }
+          }
+        )
+
+        // ============== 3D EXTREME CATEGORY (78-87) ==============
+
+        // Section 78: 3D Model Rotation (simulated)
+        gsap.to('.model-3d', {
+          rotateY: 360,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-3d-model', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
+        // Section 79: 3D Environment Nav
+        gsap.to('.env-camera', {
+          z: 1000,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-3d-env', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
+        // Section 80: Exploded View
+        gsap.utils.toArray('.explode-piece').forEach((piece, i) => {
+          const dir = i % 4
+          const offset = { x: [100, -100, 0, 0][dir], y: [0, 0, 100, -100][dir] }
+          gsap.fromTo(piece as HTMLElement,
+            { x: offset.x, y: offset.y, opacity: 0 },
+            { x: 0, y: 0, opacity: 1, ease: 'power2.out',
+              scrollTrigger: { trigger: '.section-exploded', start: 'top 60%', end: 'center center', scrub: 1 }
+            }
+          )
+        })
+
+        // Section 81: 3D Text Extrusion
+        gsap.fromTo('.extrude-text',
+          { '--depth': 0 },
+          { '--depth': 50, ease: 'power2.out',
+            scrollTrigger: { trigger: '.section-extrude', start: 'top 60%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 82: Portal Effect
+        gsap.to('.portal-frame', {
+          scale: 20,
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.section-portal', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
+        // Section 83: Isometric Scroll
+        gsap.to('.iso-container', {
+          x: -500,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-isometric', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
+        // Section 84: 3D Carousel
+        gsap.to('.carousel-3d', {
+          rotateY: 360,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-carousel-3d', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
+        // Section 85: Flip Book 3D
+        gsap.utils.toArray('.flip-page').forEach((page, i) => {
+          gsap.fromTo(page as HTMLElement,
+            { rotateY: 0 },
+            { rotateY: -180, ease: 'power2.inOut',
+              scrollTrigger: {
+                trigger: '.section-flipbook',
+                start: `${i * 10}% top`,
+                end: `${(i + 1) * 10}% top`,
+                scrub: 1
+              }
+            }
+          )
+        })
+
+        // Section 86: Hologram Effect
+        gsap.to('.hologram', {
+          '--holo-offset': 10,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-hologram', start: 'top center', end: 'bottom center', scrub: 1 }
+        })
+
+        // Section 87: 3D Layers Stack
+        gsap.utils.toArray('.layer-3d').forEach((layer, i) => {
+          gsap.fromTo(layer as HTMLElement,
+            { z: -i * 100, opacity: 0.3 },
+            { z: 0, opacity: 1, ease: 'power2.out',
+              scrollTrigger: { trigger: '.section-layers-3d', start: 'top 60%', end: 'center center', scrub: 1 }
+            }
+          )
+        })
+
+        // ============== PARTICLES CATEGORY (88-92) ==============
+
+        // Section 88: Particle Text Formation - handled by canvas
+        ScrollTrigger.create({
+          trigger: '.section-particle-text',
+          start: 'top center',
+          end: 'bottom center',
+          onUpdate: (self) => {
+            const event = new CustomEvent('particle-progress', { detail: self.progress })
+            window.dispatchEvent(event)
+          }
+        })
+
+        // Section 89: Gravity Scroll
+        ScrollTrigger.create({
+          trigger: '.section-gravity',
+          start: 'top center',
+          end: 'bottom center',
+          onUpdate: (self) => {
+            document.querySelectorAll('.gravity-ball').forEach((ball, i) => {
+              gsap.to(ball, { y: self.progress * 300 * (1 + i * 0.2), duration: 0.1 })
+            })
+          }
+        })
+
+        // Section 90: Flock/Swarm
+        gsap.to('.swarm-particle', {
+          x: 'random(-200, 200)',
+          y: 'random(-200, 200)',
+          rotation: 'random(-180, 180)',
+          stagger: { each: 0.02, repeat: -1, yoyo: true },
+          duration: 2,
+          ease: 'sine.inOut'
+        })
+
+        // Section 91: Magnetic Field Lines
+        gsap.to('.field-line', {
+          rotation: (i) => i * 10,
+          stagger: 0.05,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-magnetic', start: 'top center', end: 'bottom center', scrub: 1 }
+        })
+
+        // Section 92: Smoke/Fluid - CSS animation triggered
+        ScrollTrigger.create({
+          trigger: '.section-fluid',
+          start: 'top center',
+          onEnter: () => document.querySelector('.fluid-sim')?.classList.add('animating'),
+          onLeaveBack: () => document.querySelector('.fluid-sim')?.classList.remove('animating')
+        })
+
+        // ============== TYPOGRAPHY CATEGORY (93-97) ==============
+
+        // Section 93: Variable Font Animation
+        gsap.fromTo('.variable-font',
+          { '--wght': 100, '--wdth': 75 },
+          { '--wght': 900, '--wdth': 125, ease: 'none',
+            scrollTrigger: { trigger: '.section-variable-font', start: 'top center', end: 'bottom center', scrub: 1 }
+          }
+        )
+
+        // Section 94: SplitType Cascade
+        gsap.from('.cascade-char', {
+          y: 100,
+          rotateX: -90,
+          opacity: 0,
+          stagger: { each: 0.02, from: 'center' },
+          ease: 'back.out(1.7)',
+          scrollTrigger: { trigger: '.section-cascade', start: 'top 70%', toggleActions: 'play none none reverse' }
+        })
+
+        // Section 95: Text Outline to Fill
+        gsap.fromTo('.outline-fill',
+          { '--fill': '0%' },
+          { '--fill': '100%', ease: 'none',
+            scrollTrigger: { trigger: '.section-outline-fill', start: 'top center', end: 'bottom center', scrub: 1 }
+          }
+        )
+
+        // Section 96: Perspective Text Road
+        gsap.to('.road-text', {
+          y: -200,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-text-road', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
+        // Section 97: Video Text Mask
+        ScrollTrigger.create({
+          trigger: '.section-video-mask',
+          start: 'top center',
+          end: 'bottom center',
+          onEnter: () => {
+            const video = document.querySelector('.mask-video') as HTMLVideoElement
+            video?.play()
+          },
+          onLeave: () => {
+            const video = document.querySelector('.mask-video') as HTMLVideoElement
+            video?.pause()
+          }
+        })
+
       }, containerRef)
 
       return () => ctx.revert()
@@ -911,9 +1298,31 @@ export default function ScrollEffectsPage() {
               <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent">MAGIC</span>
             </h1>
           </div>
-          <p className="hero-subtitle text-xl md:text-2xl text-white/50 max-w-2xl mx-auto mb-12">
-            Descubre 37 efectos de animación profesionales impulsados por GSAP ScrollTrigger. Cada sección es una experiencia única.
+          <p className="hero-subtitle text-xl md:text-2xl text-white/50 max-w-2xl mx-auto mb-8">
+            Descubre 97 efectos de animación profesionales impulsados por GSAP ScrollTrigger. Cada sección es una experiencia única.
           </p>
+
+          {/* Category Navigation */}
+          <div className="hero-categories mb-8">
+            <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                    activeCategory === cat.id
+                      ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30'
+                      : 'bg-white/5 border border-white/20 text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <span>{cat.icon}</span>
+                  <span className="hidden sm:inline">{cat.name}</span>
+                  <span className="text-xs opacity-60">({cat.range})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#start" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/30 transition-all hover:scale-105">
               Explorar Efectos ↓
@@ -933,8 +1342,41 @@ export default function ScrollEffectsPage() {
         </div>
       </section>
 
+      {/* Floating Category Nav */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 opacity-0 pointer-events-none transition-all duration-300" id="floating-nav">
+        <div className="flex gap-1 p-2 bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => {
+                setActiveCategory(cat.id)
+                const section = document.querySelector(`[data-category="${cat.id}"]`)
+                section?.scrollIntoView({ behavior: 'smooth' })
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                activeCategory === cat.id
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                  : 'text-white/50 hover:text-white hover:bg-white/10'
+              }`}
+              title={`${cat.name} (${cat.range})`}
+            >
+              {cat.icon}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ============== BASIC CATEGORY (1-20) ============== */}
+      <div id="start" data-category="basic" className="category-divider py-20 bg-gradient-to-b from-black via-blue-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">🌟</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">BÁSICOS</h2>
+          <p className="text-white/50 mt-4">Efectos 1-20 • Fundamentos de ScrollTrigger</p>
+        </div>
+      </div>
+
       {/* SECTION 1: Text Reveal */}
-      <section id="start" className="section-reveal min-h-screen flex items-center justify-center relative overflow-hidden">
+      <section className="section-reveal min-h-screen flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-blue-950/20 to-black" />
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <span className="text-blue-400 text-sm font-semibold tracking-widest uppercase mb-4 block">Efecto 01 • Text Reveal</span>
@@ -1294,6 +1736,15 @@ export default function ScrollEffectsPage() {
         </div>
       </section>
 
+      {/* ============== INTERMEDIATE CATEGORY (21-37) ============== */}
+      <div data-category="intermediate" className="category-divider py-20 bg-gradient-to-b from-black via-green-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">⚡</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">INTERMEDIOS</h2>
+          <p className="text-white/50 mt-4">Efectos 21-37 • Técnicas más avanzadas</p>
+        </div>
+      </div>
+
       {/* SECTION 21: Text Decoder */}
       <section className="section-decoder min-h-screen flex items-center justify-center relative bg-gradient-to-b from-green-950/20 to-black">
         <div className="text-center px-4">
@@ -1551,7 +2002,7 @@ export default function ScrollEffectsPage() {
               <span key={i} className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">{char}</span>
             ))}
           </h2>
-          <p className="text-2xl text-white/50 max-w-2xl mx-auto">37 efectos ScrollTrigger de nivel profesional. ¡Ahora es tu turno de crear!</p>
+          <p className="text-2xl text-white/50 max-w-2xl mx-auto">57 efectos ScrollTrigger de nivel profesional. ¡Ahora es tu turno de crear!</p>
         </div>
       </section>
 
@@ -1585,6 +2036,15 @@ export default function ScrollEffectsPage() {
           </div>
         </div>
       </section>
+
+      {/* ============== ADVANCED CATEGORY (38-57) ============== */}
+      <div data-category="advanced" className="category-divider py-20 bg-gradient-to-b from-black via-indigo-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">🚀</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">AVANZADOS</h2>
+          <p className="text-white/50 mt-4">Efectos 38-57 • Técnicas profesionales</p>
+        </div>
+      </div>
 
       {/* SECTION 38: Scroll Velocity Skew */}
       <section className="section-velocity-skew min-h-[200vh] relative bg-gradient-to-b from-black via-indigo-950/30 to-black overflow-hidden">
@@ -1853,17 +2313,596 @@ export default function ScrollEffectsPage() {
         </div>
       </section>
 
+      {/* ============== SHADERS CATEGORY (58-67) ============== */}
+      <div data-category="shaders" className="category-divider py-20 bg-gradient-to-b from-black via-blue-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">🌊</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">SHADERS</h2>
+          <p className="text-white/50 mt-4">Efectos 58-67 • Distorsiones y efectos visuales avanzados</p>
+        </div>
+      </div>
+
+      {/* SECTION 58: Liquid Distortion */}
+      <section className="section-liquid min-h-[200vh] relative bg-black overflow-hidden">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-blue-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 58 • Liquid Distortion</span>
+          <div className="liquid-distort w-full max-w-4xl aspect-video rounded-3xl overflow-hidden" style={{ filter: 'url(#liquid-filter)' }}>
+            <div className="w-full h-full bg-gradient-to-br from-blue-600 via-cyan-500 to-teal-400 flex items-center justify-center">
+              <h3 className="text-6xl font-black text-white">LIQUID</h3>
+            </div>
+          </div>
+          <svg className="hidden"><defs><filter id="liquid-filter"><feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
+        </div>
+      </section>
+
+      {/* SECTION 59: RGB Split */}
+      <section className="section-rgb-split min-h-[200vh] relative bg-black overflow-hidden">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-red-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 59 • RGB Split</span>
+          <div className="rgb-split relative">
+            <h2 className="text-7xl md:text-9xl font-black text-white relative" style={{ textShadow: 'calc(var(--split, 0) * -1px) 0 #ff0000, calc(var(--split, 0) * 1px) 0 #00ffff' }}>
+              CHROMATIC
+            </h2>
+            <p className="text-white/50 text-center mt-8">Scrollea rápido para ver la aberración cromática</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 60: Noise Displacement */}
+      <section className="section-noise min-h-screen flex items-center justify-center relative bg-gradient-to-b from-black to-purple-950/30">
+        <span className="absolute top-8 left-8 text-purple-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 60 • Noise Displacement</span>
+        <div className="noise-displace text-center" style={{ filter: 'url(#noise-filter)' }}>
+          <h2 className="text-6xl md:text-8xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">NOISE</h2>
+          <p className="text-white/50 mt-4">El ruido se disipa con el scroll</p>
+        </div>
+        <svg className="hidden"><defs><filter id="noise-filter"><feTurbulence type="fractalNoise" baseFrequency="0.05" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="50"/></filter></defs></svg>
+      </section>
+
+      {/* SECTION 61: Metaball Fusion */}
+      <section className="section-metaball min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-green-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 61 • Metaball Fusion</span>
+        <div className="relative" style={{ filter: 'url(#metaball-filter)' }}>
+          <div className="flex gap-0">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div key={i} className="metaball w-24 h-24 rounded-full bg-green-500" />
+            ))}
+          </div>
+        </div>
+        <svg className="hidden"><defs><filter id="metaball-filter"><feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="contrast"/><feComposite in="SourceGraphic" in2="contrast" operator="atop"/></filter></defs></svg>
+      </section>
+
+      {/* SECTION 62: Heat Wave */}
+      <section className="section-heat min-h-[200vh] relative bg-gradient-to-b from-black via-orange-950/30 to-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-orange-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 62 • Heat Wave</span>
+          <div className="heat-wave text-center">
+            <span className="text-[150px]">🔥</span>
+            <h3 className="text-5xl font-black text-white mt-4">CALOR EXTREMO</h3>
+            <p className="text-white/50 mt-4">Efecto de ondas de calor</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 63: Glitch Shader */}
+      <section className="section-glitch-shader min-h-screen flex items-center justify-center relative bg-black">
+        <span className="absolute top-8 left-8 text-red-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 63 • Glitch Shader</span>
+        <div className="glitch-shader text-center transition-all">
+          <h2 className="text-6xl md:text-8xl font-black text-white glitch-text" data-text="GLITCH">GLITCH</h2>
+          <style jsx>{`.glitching .glitch-text { animation: glitch 0.3s infinite; } @keyframes glitch { 0%, 100% { text-shadow: 2px 0 red, -2px 0 cyan; } 50% { text-shadow: -2px 0 red, 2px 0 cyan; transform: skewX(2deg); }}`}</style>
+        </div>
+      </section>
+
+      {/* SECTION 64: Pixelation Effect */}
+      <section className="section-pixelate min-h-screen flex items-center justify-center relative bg-gradient-to-b from-black to-indigo-950/30">
+        <span className="absolute top-8 left-8 text-indigo-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 64 • Pixelation</span>
+        <div className="pixelate w-80 h-80 rounded-3xl overflow-hidden" style={{ imageRendering: 'pixelated' }}>
+          <div className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
+            <span className="text-[100px]">👾</span>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 65: Halftone Effect */}
+      <section className="section-halftone min-h-screen flex items-center justify-center relative bg-black">
+        <span className="absolute top-8 left-8 text-gray-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 65 • Halftone</span>
+        <div className="halftone w-80 h-80 rounded-3xl overflow-hidden relative">
+          <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-800 flex items-center justify-center">
+            <h3 className="text-4xl font-black text-black">HALFTONE</h3>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 66: Duotone Shift */}
+      <section className="section-duotone min-h-[200vh] relative bg-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-pink-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 66 • Duotone Shift</span>
+          <div className="duotone w-96 h-96 rounded-3xl overflow-hidden" style={{ filter: 'sepia(1) hue-rotate(calc(var(--hue, 0) * 1deg))' }}>
+            <div className="w-full h-full bg-gradient-to-br from-white to-gray-600 flex items-center justify-center">
+              <span className="text-[120px]">🎨</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 67: Scan Lines */}
+      <section className="section-scanlines min-h-[200vh] relative bg-black overflow-hidden">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-green-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 67 • Scan Lines</span>
+          <div className="scanlines relative">
+            <h2 className="text-6xl font-mono font-black text-green-400">SCANNING...</h2>
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.1) 2px, rgba(0,255,0,0.1) 4px)' }} />
+            <div className="absolute left-0 right-0 h-1 bg-green-400 opacity-50" style={{ top: 'var(--scan-pos, 0%)', boxShadow: '0 0 20px #00ff00' }} />
+          </div>
+        </div>
+      </section>
+
+      {/* ============== CINEMATIC CATEGORY (68-77) ============== */}
+      <div data-category="cinematic" className="category-divider py-20 bg-gradient-to-b from-black via-red-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">🎬</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">CINEMATOGRÁFICO</h2>
+          <p className="text-white/50 mt-4">Efectos 68-77 • Efectos de cámara profesionales</p>
+        </div>
+      </div>
+
+      {/* SECTION 68: Dolly Zoom */}
+      <section className="section-dolly min-h-[300vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-red-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 68 • Dolly Zoom (Vértigo)</span>
+        <div className="h-screen flex items-center justify-center relative">
+          <div className="dolly-bg absolute inset-0 bg-gradient-to-br from-red-900 via-purple-900 to-blue-900" />
+          <div className="dolly-subject relative z-10 text-center">
+            <span className="text-[150px]">😱</span>
+            <h3 className="text-4xl font-black text-white">VÉRTIGO</h3>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 69: Rack Focus */}
+      <section className="section-rack-focus min-h-[200vh] relative bg-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-amber-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 69 • Rack Focus</span>
+          <div className="relative w-full max-w-4xl h-96">
+            <div className="rack-front absolute left-1/4 top-1/2 -translate-y-1/2 text-9xl z-10">🎯</div>
+            <div className="rack-back absolute right-1/4 top-1/2 -translate-y-1/2 text-9xl" style={{ filter: 'blur(10px)' }}>🌟</div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 70: Ken Burns Parallax */}
+      <section className="section-ken-burns min-h-[200vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-yellow-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 70 • Ken Burns Parallax</span>
+        <div className="sticky top-0 h-screen overflow-hidden">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className={`ken-layer absolute inset-0 flex items-center justify-center`} style={{ zIndex: i }}>
+              <div className={`w-full h-full bg-gradient-to-br ${['from-yellow-900/20 to-orange-900/20', 'from-orange-900/30 to-red-900/30', 'from-red-900/40 to-pink-900/40', 'from-pink-900/50 to-purple-900/50', 'from-purple-900/60 to-blue-900/60'][i-1]}`} />
+            </div>
+          ))}
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <h3 className="text-5xl font-black text-white">KEN BURNS</h3>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 71: Match Cut */}
+      <section className="section-match-cut min-h-[300vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-pink-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 71 • Match Cut</span>
+        <div className="h-screen flex items-center justify-center relative">
+          <div className="match-a absolute text-[200px]">🌙</div>
+          <div className="match-b absolute text-[200px]">☀️</div>
+        </div>
+      </section>
+
+      {/* SECTION 72: First Person Camera */}
+      <section className="section-first-person min-h-[200vh] relative bg-black overflow-hidden">
+        <div className="sticky top-0 h-screen">
+          <span className="absolute top-8 left-8 text-cyan-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 72 • First Person Camera</span>
+          <div className="first-person h-full flex items-center justify-center" style={{ perspective: '1000px' }}>
+            <div className="grid grid-cols-3 gap-8 p-8">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className="w-24 h-24 bg-gradient-to-br from-cyan-500/30 to-blue-600/30 rounded-xl" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 73: Letterbox Cinematic */}
+      <section className="section-letterbox min-h-screen flex items-center justify-center relative bg-gradient-to-br from-gray-900 to-black">
+        <span className="absolute top-8 left-8 text-gray-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 73 • Letterbox</span>
+        <div className="letterbox absolute top-0 left-0 right-0 h-20 bg-black origin-top" />
+        <div className="letterbox absolute bottom-0 left-0 right-0 h-20 bg-black origin-bottom" />
+        <div className="text-center">
+          <h2 className="text-5xl font-black text-white">CINEMATIC</h2>
+          <p className="text-white/50 mt-4">Formato cinematográfico 2.35:1</p>
+        </div>
+      </section>
+
+      {/* SECTION 74: Film Grain */}
+      <section className="section-film-grain min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-amber-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 74 • Film Grain</span>
+        <div className="film-grain absolute inset-0 opacity-0 transition-opacity pointer-events-none" style={{ background: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.5\'/%3E%3C/svg%3E")' }} />
+        <style jsx>{`.film-grain.active { opacity: 0.3; animation: grain 0.5s steps(10) infinite; } @keyframes grain { 0%, 100% { transform: translate(0); } 10% { transform: translate(-5%, -10%); } 30% { transform: translate(3%, -15%); } 50% { transform: translate(12%, 9%); } 70% { transform: translate(9%, 4%); } 90% { transform: translate(-1%, 7%); }}`}</style>
+        <div className="relative z-10 text-center">
+          <h2 className="text-6xl font-black text-amber-100" style={{ fontFamily: 'serif' }}>FILM GRAIN</h2>
+          <p className="text-amber-200/50 mt-4">Estética de película vintage</p>
+        </div>
+      </section>
+
+      {/* SECTION 75: VHS Effect */}
+      <section className="section-vhs min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-blue-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 75 • VHS Effect</span>
+        <div className="vhs-effect relative">
+          <h2 className="text-6xl font-black text-white" style={{ textShadow: 'calc(var(--tracking, 0) * 0.5px) 0 #ff0000, calc(var(--tracking, 0) * -0.5px) 0 #00ffff' }}>RETRO VHS</h2>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)' }} />
+        </div>
+      </section>
+
+      {/* SECTION 76: Slow Motion */}
+      <section className="section-slow-mo min-h-[300vh] relative bg-gradient-to-b from-black to-indigo-950/30">
+        <span className="absolute top-8 left-8 text-indigo-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 76 • Slow Motion</span>
+        <div className="h-screen flex items-center justify-center">
+          <div className="flex gap-8">
+            {['⏳', '🎬', '🌊', '💫'].map((emoji, i) => (
+              <div key={i} className="slow-mo-element text-8xl">{emoji}</div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 77: Whip Pan */}
+      <section className="section-whip-pan min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-orange-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 77 • Whip Pan</span>
+        <div className="whip-pan">
+          <h2 className="text-6xl md:text-8xl font-black text-white">WHIP PAN!</h2>
+          <p className="text-white/50 text-center mt-4">Transición rápida de cámara</p>
+        </div>
+      </section>
+
+      {/* ============== 3D EXTREME CATEGORY (78-87) ============== */}
+      <div data-category="3d" className="category-divider py-20 bg-gradient-to-b from-black via-purple-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">🔮</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent">3D EXTREMO</h2>
+          <p className="text-white/50 mt-4">Efectos 78-87 • Transformaciones 3D avanzadas</p>
+        </div>
+      </div>
+
+      {/* SECTION 78: 3D Model Rotation */}
+      <section className="section-3d-model min-h-[400vh] relative bg-black" style={{ perspective: '2000px' }}>
+        <span className="absolute top-8 left-8 text-purple-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 78 • 3D Model Rotation</span>
+        <div className="h-screen flex items-center justify-center">
+          <div className="model-3d w-64 h-64 relative" style={{ transformStyle: 'preserve-3d' }}>
+            {['front', 'back', 'left', 'right', 'top', 'bottom'].map((face, i) => (
+              <div key={face} className={`absolute w-64 h-64 bg-gradient-to-br from-purple-500/80 to-fuchsia-600/80 border border-purple-300/30 flex items-center justify-center text-white font-bold text-xl backdrop-blur-sm`}
+                style={{
+                  transform: [
+                    'translateZ(128px)',
+                    'translateZ(-128px) rotateY(180deg)',
+                    'translateX(-128px) rotateY(-90deg)',
+                    'translateX(128px) rotateY(90deg)',
+                    'translateY(-128px) rotateX(90deg)',
+                    'translateY(128px) rotateX(-90deg)'
+                  ][i]
+                }}>
+                {face.toUpperCase()}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 79: 3D Environment */}
+      <section className="section-3d-env min-h-[500vh] relative bg-black overflow-hidden" style={{ perspective: '1000px' }}>
+        <span className="absolute top-8 left-8 text-cyan-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 79 • 3D Environment</span>
+        <div className="h-screen flex items-center justify-center">
+          <div className="env-camera relative" style={{ transformStyle: 'preserve-3d' }}>
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div key={i} className="absolute w-32 h-32 bg-gradient-to-br from-cyan-500/30 to-blue-600/30 border border-cyan-500/50 rounded-xl flex items-center justify-center"
+                style={{ transform: `translateZ(${-i * 200}px) translateX(${(i % 3 - 1) * 200}px)` }}>
+                <span className="text-4xl">{['🌟', '🚀', '💎'][i % 3]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 80: Exploded View */}
+      <section className="section-exploded min-h-[200vh] relative bg-gradient-to-b from-black to-emerald-950/30" style={{ perspective: '1000px' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-emerald-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 80 • Exploded View</span>
+          <div className="relative w-64 h-64" style={{ transformStyle: 'preserve-3d' }}>
+            {['⚙️', '🔧', '🔩', '⛓️'].map((piece, i) => (
+              <div key={i} className="explode-piece absolute w-24 h-24 flex items-center justify-center text-5xl"
+                style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                {piece}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 81: 3D Text Extrusion */}
+      <section className="section-extrude min-h-screen flex items-center justify-center relative bg-black" style={{ perspective: '1000px' }}>
+        <span className="absolute top-8 left-8 text-yellow-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 81 • 3D Text Extrusion</span>
+        <div className="extrude-text text-center" style={{ transformStyle: 'preserve-3d' }}>
+          <h2 className="text-7xl font-black text-yellow-400" style={{ textShadow: Array.from({ length: 20 }).map((_, i) => `${i}px ${i}px 0 rgba(251, 191, 36, ${1 - i * 0.05})`).join(', ') }}>
+            EXTRUDE
+          </h2>
+        </div>
+      </section>
+
+      {/* SECTION 82: Portal Effect */}
+      <section className="section-portal min-h-[400vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-violet-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 82 • Portal Effect</span>
+        <div className="h-screen flex items-center justify-center relative">
+          <div className="portal-frame absolute w-40 h-40 rounded-full border-8 border-violet-500 flex items-center justify-center" style={{ boxShadow: '0 0 50px #8b5cf6, inset 0 0 50px #8b5cf6' }}>
+            <div className="w-full h-full bg-gradient-to-br from-violet-600 to-purple-900 rounded-full flex items-center justify-center">
+              <span className="text-4xl">🌀</span>
+            </div>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-pink-600 to-blue-600 -z-10" />
+        </div>
+      </section>
+
+      {/* SECTION 83: Isometric Scroll */}
+      <section className="section-isometric min-h-[400vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-teal-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 83 • Isometric Scroll</span>
+        <div className="h-screen flex items-center justify-center" style={{ perspective: '1000px' }}>
+          <div className="iso-container flex gap-4" style={{ transform: 'rotateX(60deg) rotateZ(-45deg)', transformStyle: 'preserve-3d' }}>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="w-24 h-24 bg-gradient-to-br from-teal-400 to-cyan-600 rounded-lg shadow-xl" style={{ transform: `translateZ(${i * 20}px)` }} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 84: 3D Carousel */}
+      <section className="section-carousel-3d min-h-[400vh] relative bg-black" style={{ perspective: '1500px' }}>
+        <span className="absolute top-8 left-8 text-rose-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 84 • 3D Carousel</span>
+        <div className="h-screen flex items-center justify-center">
+          <div className="carousel-3d relative w-80 h-80" style={{ transformStyle: 'preserve-3d' }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="absolute w-40 h-56 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-2xl"
+                style={{ transform: `rotateY(${i * 45}deg) translateZ(250px)` }}>
+                {i + 1}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 85: Flip Book */}
+      <section className="section-flipbook min-h-[500vh] relative bg-gradient-to-b from-black to-amber-950/30" style={{ perspective: '2000px' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-amber-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 85 • Flip Book</span>
+          <div className="relative w-72 h-96" style={{ transformStyle: 'preserve-3d' }}>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="flip-page absolute inset-0 bg-gradient-to-br from-amber-100 to-amber-200 rounded-lg shadow-xl flex items-center justify-center origin-left"
+                style={{ zIndex: 10 - i, backfaceVisibility: 'hidden' }}>
+                <span className="text-6xl font-black text-amber-900">P{i + 1}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 86: Hologram */}
+      <section className="section-hologram min-h-[200vh] relative bg-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-cyan-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 86 • Hologram</span>
+          <div className="hologram relative">
+            <h2 className="text-7xl font-black" style={{
+              color: 'transparent',
+              background: 'linear-gradient(45deg, #00ffff, #ff00ff, #00ffff)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              textShadow: '0 0 20px rgba(0,255,255,0.5), 0 0 40px rgba(255,0,255,0.3)'
+            }}>HOLOGRAM</h2>
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.1) 2px, rgba(0,255,255,0.1) 4px)'
+            }} />
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 87: 3D Layers Stack */}
+      <section className="section-layers-3d min-h-[200vh] relative bg-black" style={{ perspective: '1500px' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-blue-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 87 • 3D Layers Stack</span>
+          <div className="relative" style={{ transformStyle: 'preserve-3d' }}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className={`layer-3d absolute w-80 h-48 rounded-2xl bg-gradient-to-br ${['from-blue-500 to-cyan-600', 'from-purple-500 to-pink-600', 'from-green-500 to-teal-600', 'from-orange-500 to-red-600', 'from-indigo-500 to-violet-600'][i]} flex items-center justify-center text-white font-bold text-2xl shadow-2xl`}
+                style={{ transform: `translateZ(${-i * 50}px)`, left: `-${40 - i * 10}%`, top: `-${24 - i * 5}%` }}>
+                Layer {i + 1}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== PARTICLES CATEGORY (88-92) ============== */}
+      <div data-category="particles" className="category-divider py-20 bg-gradient-to-b from-black via-cyan-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">✨</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">PARTÍCULAS</h2>
+          <p className="text-white/50 mt-4">Efectos 88-92 • Sistemas de partículas y física</p>
+        </div>
+      </div>
+
+      {/* SECTION 88: Particle Text Formation */}
+      <section className="section-particle-text min-h-[300vh] relative bg-black overflow-hidden">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-cyan-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 88 • Particle Text</span>
+          <div className="relative">
+            <h2 className="text-7xl md:text-9xl font-black text-transparent" style={{ WebkitTextStroke: '2px rgba(0,255,255,0.3)' }}>PARTICLES</h2>
+            <div className="absolute inset-0 flex items-center justify-center">
+              {Array.from({ length: 50 }).map((_, i) => (
+                <div key={i} className="absolute w-2 h-2 bg-cyan-400 rounded-full animate-pulse"
+                  style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, animationDelay: `${i * 0.05}s` }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 89: Gravity Scroll */}
+      <section className="section-gravity min-h-[200vh] relative bg-gradient-to-b from-black to-indigo-950/30">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-indigo-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 89 • Gravity Scroll</span>
+          <div className="relative w-96 h-96 border-2 border-indigo-500/30 rounded-3xl overflow-hidden">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className={`gravity-ball absolute w-8 h-8 rounded-full ${['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500'][i % 5]}`}
+                style={{ left: `${10 + i * 8}%`, top: '10%' }} />
+            ))}
+            <p className="absolute bottom-4 left-0 right-0 text-center text-white/50 text-sm">La gravedad aumenta con el scroll</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 90: Flock/Swarm */}
+      <section className="section-swarm min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-amber-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 90 • Flock/Swarm</span>
+        <div className="relative w-96 h-96">
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div key={i} className="swarm-particle absolute w-3 h-3 bg-amber-400 rounded-full"
+              style={{ left: '50%', top: '50%' }} />
+          ))}
+        </div>
+        <p className="absolute bottom-8 text-white/50">Partículas con comportamiento de enjambre</p>
+      </section>
+
+      {/* SECTION 91: Magnetic Field */}
+      <section className="section-magnetic min-h-[200vh] relative bg-gradient-to-b from-black to-purple-950/30">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-purple-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 91 • Magnetic Field</span>
+          <div className="relative w-80 h-80">
+            {Array.from({ length: 36 }).map((_, i) => (
+              <div key={i} className="field-line absolute w-40 h-0.5 bg-gradient-to-r from-purple-500 to-transparent origin-left"
+                style={{ left: '50%', top: '50%', transform: `rotate(${i * 10}deg)` }} />
+            ))}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50" />
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 92: Fluid Simulation */}
+      <section className="section-fluid min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-blue-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 92 • Fluid Simulation</span>
+        <div className="fluid-sim relative w-full max-w-2xl h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-blue-900 to-purple-900">
+          <div className="absolute inset-0">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="absolute w-64 h-64 rounded-full blur-3xl"
+                style={{
+                  background: ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b'][i],
+                  opacity: 0.3,
+                  left: `${20 + i * 15}%`,
+                  top: `${30 + (i % 2) * 20}%`,
+                  animation: `float ${3 + i}s ease-in-out infinite alternate`
+                }} />
+            ))}
+          </div>
+          <style jsx>{`@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(20px, -20px) scale(1.1); }}`}</style>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <h3 className="text-4xl font-black text-white/80">FLUID</h3>
+          </div>
+        </div>
+      </section>
+
+      {/* ============== TYPOGRAPHY CATEGORY (93-97) ============== */}
+      <div data-category="typography" className="category-divider py-20 bg-gradient-to-b from-black via-pink-950/20 to-black">
+        <div className="text-center">
+          <span className="text-6xl mb-4 block">📝</span>
+          <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">TIPOGRAFÍA</h2>
+          <p className="text-white/50 mt-4">Efectos 93-97 • Animaciones de texto avanzadas</p>
+        </div>
+      </div>
+
+      {/* SECTION 93: Variable Font */}
+      <section className="section-variable-font min-h-[200vh] relative bg-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-pink-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 93 • Variable Font</span>
+          <div className="variable-font text-center">
+            <h2 className="text-6xl md:text-8xl font-black text-white" style={{ fontVariationSettings: `'wght' var(--wght, 400), 'wdth' var(--wdth, 100)` }}>
+              VARIABLE
+            </h2>
+            <p className="text-white/50 mt-8">El peso y ancho cambian con el scroll</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 94: SplitType Cascade */}
+      <section className="section-cascade min-h-screen flex items-center justify-center relative bg-gradient-to-b from-black to-rose-950/30">
+        <span className="absolute top-8 left-8 text-rose-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 94 • Cascade Animation</span>
+        <div className="text-center" style={{ perspective: '1000px' }}>
+          <h2 className="text-5xl md:text-7xl font-black text-white">
+            {'CASCADE'.split('').map((char, i) => (
+              <span key={i} className="cascade-char inline-block">{char}</span>
+            ))}
+          </h2>
+        </div>
+      </section>
+
+      {/* SECTION 95: Outline to Fill */}
+      <section className="section-outline-fill min-h-[200vh] relative bg-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-yellow-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 95 • Outline to Fill</span>
+          <div className="outline-fill relative">
+            <h2 className="text-6xl md:text-9xl font-black text-transparent" style={{ WebkitTextStroke: '2px #fbbf24' }}>FILL ME</h2>
+            <h2 className="text-6xl md:text-9xl font-black text-yellow-400 absolute inset-0" style={{ clipPath: `inset(0 ${100 - (Number('var(--fill, 0)'.replace('%', '')) || 0)}% 0 0)` }}>FILL ME</h2>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 96: Perspective Text Road */}
+      <section className="section-text-road min-h-[400vh] relative bg-black overflow-hidden" style={{ perspective: '1000px' }}>
+        <span className="absolute top-8 left-8 text-green-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 96 • Text Road</span>
+        <div className="h-screen flex items-center justify-center" style={{ transformStyle: 'preserve-3d' }}>
+          <div className="road-text flex flex-col items-center gap-4" style={{ transform: 'rotateX(60deg)', transformOrigin: 'center bottom' }}>
+            {['SCROLL', 'DOWN', 'THE', 'ROAD', 'TO', 'INFINITY'].map((word, i) => (
+              <span key={i} className="text-4xl md:text-6xl font-black text-green-400" style={{ opacity: 1 - i * 0.1 }}>{word}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 97: Video Text Mask */}
+      <section className="section-video-mask min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-violet-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 97 • Video Text Mask</span>
+        <div className="relative">
+          <h2 className="text-6xl md:text-[150px] font-black leading-none" style={{
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            backgroundImage: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)'
+          }}>
+            VIDEO
+          </h2>
+          <video className="mask-video absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-50" muted loop playsInline>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </section>
+
       {/* GRAND FINALE */}
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-t from-purple-950/50 via-black to-blue-950/50">
         <div className="absolute inset-0">
-          {Array.from({ length: 150 }).map((_, i) => (
+          {Array.from({ length: 200 }).map((_, i) => (
             <div key={i} className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
-              style={{ left: `${(i * 0.67) % 100}%`, top: `${(i * 1.3) % 100}%`, animationDelay: `${(i * 0.03) % 3}s`, opacity: 0.2 + (i % 5) * 0.1 }} />
+              style={{ left: `${(i * 0.5) % 100}%`, top: `${(i * 1.1) % 100}%`, animationDelay: `${(i * 0.02) % 3}s`, opacity: 0.2 + (i % 7) * 0.1 }} />
           ))}
         </div>
         <div className="relative z-10 text-center px-4">
-          <h2 className="text-6xl md:text-9xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent mb-8">57 EFECTOS</h2>
-          <p className="text-2xl text-white/50 max-w-2xl mx-auto mb-12">Has explorado todos los efectos ScrollTrigger de nivel profesional. ¡Ahora es tu turno de crear!</p>
+          <span className="text-2xl mb-4 block">🏆</span>
+          <h2 className="text-6xl md:text-9xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent mb-4">97 EFECTOS</h2>
+          <p className="text-xl text-white/30 mb-8">La colección más completa de ScrollTrigger</p>
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {categories.slice(1).map((cat) => (
+              <span key={cat.id} className="px-3 py-1 bg-white/5 rounded-full text-sm text-white/50">
+                {cat.icon} {cat.name}
+              </span>
+            ))}
+          </div>
+          <p className="text-2xl text-white/50 max-w-2xl mx-auto">Has explorado todos los efectos ScrollTrigger de nivel profesional. ¡Ahora es tu turno de crear!</p>
         </div>
       </section>
 
