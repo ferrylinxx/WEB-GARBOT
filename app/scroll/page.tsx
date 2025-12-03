@@ -553,6 +553,315 @@ export default function ScrollEffectsPage() {
           }
         )
 
+        // Section 38: Scroll Velocity Skew
+        let skewSetter = gsap.quickTo('.velocity-skew-text', 'skewX', { duration: 0.3 })
+        ScrollTrigger.create({
+          trigger: '.section-velocity-skew',
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            const velocity = self.getVelocity()
+            skewSetter(gsap.utils.clamp(-15, 15, velocity / 300))
+          }
+        })
+
+        // Section 39: Video Scrub Control
+        const video = document.querySelector('.scroll-video') as HTMLVideoElement
+        if (video) {
+          video.pause()
+          ScrollTrigger.create({
+            trigger: '.section-video-scrub',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+            onUpdate: (self) => {
+              if (video.duration) {
+                video.currentTime = self.progress * video.duration
+              }
+            }
+          })
+        }
+
+        // Section 40: Text Scramble
+        ScrollTrigger.create({
+          trigger: '.section-scramble',
+          start: 'top 60%',
+          onEnter: () => {
+            const el = document.querySelector('.scramble-text') as HTMLElement
+            if (el) {
+              const finalText = el.getAttribute('data-text') || 'SCRAMBLE'
+              const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+              let iteration = 0
+              const interval = setInterval(() => {
+                el.innerText = finalText.split('').map((char, i) => {
+                  if (i < iteration) return finalText[i]
+                  return chars[Math.floor(Math.random() * chars.length)]
+                }).join('')
+                if (iteration >= finalText.length) clearInterval(interval)
+                iteration += 1/3
+              }, 30)
+            }
+          }
+        })
+
+        // Section 41: Sticky Cross-Fade
+        gsap.utils.toArray('.crossfade-panel').forEach((panel, i) => {
+          gsap.fromTo(panel as HTMLElement,
+            { opacity: 0 },
+            { opacity: 1, ease: 'none',
+              scrollTrigger: {
+                trigger: panel as HTMLElement,
+                start: 'top 80%',
+                end: 'top 20%',
+                scrub: true
+              }
+            }
+          )
+        })
+
+        // Section 42: Perspective Tilt on Scroll
+        gsap.utils.toArray('.tilt-card').forEach((card) => {
+          gsap.to(card as HTMLElement, {
+            rotateX: 15,
+            rotateY: -10,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card as HTMLElement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1
+            }
+          })
+        })
+
+        // Section 43: Text Highlight Reveal
+        gsap.fromTo('.highlight-text span',
+          { backgroundSize: '0% 100%' },
+          { backgroundSize: '100% 100%', stagger: 0.1, ease: 'none',
+            scrollTrigger: { trigger: '.section-highlight', start: 'top 60%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 44: Folding Paper Effect
+        gsap.utils.toArray('.paper-fold').forEach((fold, i) => {
+          gsap.fromTo(fold as HTMLElement,
+            { rotateX: -90, transformOrigin: 'top center' },
+            { rotateX: 0, ease: 'power2.out',
+              scrollTrigger: {
+                trigger: '.section-paper',
+                start: `top+=${i * 100} 60%`,
+                end: `top+=${i * 100 + 200} 30%`,
+                scrub: 1
+              }
+            }
+          )
+        })
+
+        // Section 45: Curtain Reveal
+        gsap.to('.curtain-left', {
+          xPercent: -100,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.section-curtain', start: 'top 50%', end: 'center center', scrub: 1 }
+        })
+        gsap.to('.curtain-right', {
+          xPercent: 100,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.section-curtain', start: 'top 50%', end: 'center center', scrub: 1 }
+        })
+
+        // Section 46: CSS Filter Progression
+        gsap.fromTo('.filter-image',
+          { filter: 'grayscale(100%) blur(10px) brightness(0.3)' },
+          { filter: 'grayscale(0%) blur(0px) brightness(1)', ease: 'none',
+            scrollTrigger: { trigger: '.section-filter', start: 'top 70%', end: 'center center', scrub: 1 }
+          }
+        )
+
+        // Section 47: Scatter Gather 3D
+        gsap.utils.toArray('.scatter-item').forEach((item, i) => {
+          const randomX = (Math.random() - 0.5) * 500
+          const randomY = (Math.random() - 0.5) * 500
+          const randomZ = (Math.random() - 0.5) * 500
+          const randomRotate = Math.random() * 360
+          gsap.fromTo(item as HTMLElement,
+            { x: randomX, y: randomY, z: randomZ, rotation: randomRotate, opacity: 0 },
+            { x: 0, y: 0, z: 0, rotation: 0, opacity: 1, ease: 'power3.out',
+              scrollTrigger: { trigger: '.section-scatter', start: 'top 60%', end: 'center center', scrub: 1 }
+            }
+          )
+        })
+
+        // Section 48: Scroll Progress Map
+        gsap.utils.toArray('.progress-dot').forEach((dot, i) => {
+          ScrollTrigger.create({
+            trigger: `.map-section-${i + 1}`,
+            start: 'top center',
+            end: 'bottom center',
+            onEnter: () => gsap.to(dot as HTMLElement, { scale: 1.5, backgroundColor: '#00ff88', duration: 0.3 }),
+            onLeave: () => gsap.to(dot as HTMLElement, { scale: 1, backgroundColor: '#ffffff', duration: 0.3 }),
+            onEnterBack: () => gsap.to(dot as HTMLElement, { scale: 1.5, backgroundColor: '#00ff88', duration: 0.3 }),
+            onLeaveBack: () => gsap.to(dot as HTMLElement, { scale: 1, backgroundColor: '#ffffff', duration: 0.3 })
+          })
+        })
+
+        // Section 49: Zoom to Detail
+        gsap.fromTo('.zoom-detail',
+          { scale: 0.1, opacity: 0.3 },
+          { scale: 1, opacity: 1, ease: 'power2.inOut',
+            scrollTrigger: { trigger: '.section-zoom-detail', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+          }
+        )
+
+        // Section 50: Confetti Celebration
+        ScrollTrigger.create({
+          trigger: '.section-confetti',
+          start: 'top 60%',
+          once: true,
+          onEnter: () => {
+            const container = document.querySelector('.confetti-container')
+            if (container) {
+              for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div')
+                confetti.className = 'confetti-piece'
+                confetti.style.cssText = `
+                  position: absolute;
+                  width: ${Math.random() * 10 + 5}px;
+                  height: ${Math.random() * 10 + 5}px;
+                  background: hsl(${Math.random() * 360}, 100%, 50%);
+                  left: 50%;
+                  top: 50%;
+                  border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                `
+                container.appendChild(confetti)
+                gsap.to(confetti, {
+                  x: (Math.random() - 0.5) * 800,
+                  y: (Math.random() - 0.5) * 800,
+                  rotation: Math.random() * 720,
+                  opacity: 0,
+                  duration: 2 + Math.random(),
+                  ease: 'power2.out'
+                })
+              }
+            }
+          }
+        })
+
+        // Section 51: Magnetic Cursor Effect
+        const magneticItems = document.querySelectorAll('.magnetic-cursor-item')
+        magneticItems.forEach((item) => {
+          const el = item as HTMLElement
+          el.addEventListener('mousemove', (e: MouseEvent) => {
+            const rect = el.getBoundingClientRect()
+            const x = e.clientX - rect.left - rect.width / 2
+            const y = e.clientY - rect.top - rect.height / 2
+            gsap.to(el, { x: x * 0.3, y: y * 0.3, duration: 0.3 })
+          })
+          el.addEventListener('mouseleave', () => {
+            gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' })
+          })
+        })
+
+        // Section 52: Particle Flow
+        const particleCanvas = document.querySelector('.particle-canvas') as HTMLCanvasElement
+        if (particleCanvas) {
+          const ctx = particleCanvas.getContext('2d')
+          particleCanvas.width = window.innerWidth
+          particleCanvas.height = window.innerHeight
+          const particles: { x: number; y: number; vx: number; vy: number; size: number }[] = []
+          for (let i = 0; i < 100; i++) {
+            particles.push({
+              x: Math.random() * particleCanvas.width,
+              y: Math.random() * particleCanvas.height,
+              vx: (Math.random() - 0.5) * 2,
+              vy: Math.random() * 2 + 1,
+              size: Math.random() * 3 + 1
+            })
+          }
+          let scrollVelocity = 0
+          ScrollTrigger.create({
+            trigger: '.section-particle-flow',
+            start: 'top bottom',
+            end: 'bottom top',
+            onUpdate: (self) => { scrollVelocity = self.getVelocity() / 1000 }
+          })
+          function animateParticles() {
+            if (ctx) {
+              ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height)
+              particles.forEach((p) => {
+                p.y += p.vy + scrollVelocity
+                p.x += p.vx
+                if (p.y > particleCanvas.height) { p.y = 0; p.x = Math.random() * particleCanvas.width }
+                if (p.y < 0) { p.y = particleCanvas.height }
+                if (p.x > particleCanvas.width) p.x = 0
+                if (p.x < 0) p.x = particleCanvas.width
+                ctx.beginPath()
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+                ctx.fillStyle = `rgba(100, 200, 255, ${0.5 + Math.abs(scrollVelocity) * 0.1})`
+                ctx.fill()
+              })
+            }
+            requestAnimationFrame(animateParticles)
+          }
+          animateParticles()
+        }
+
+        // Section 53: Scroll Snap Hybrid
+        gsap.utils.toArray('.snap-section').forEach((section) => {
+          gsap.fromTo(section as HTMLElement,
+            { opacity: 0.3, scale: 0.9 },
+            { opacity: 1, scale: 1, ease: 'power2.out',
+              scrollTrigger: { trigger: section as HTMLElement, start: 'top center', end: 'center center', scrub: 1 }
+            }
+          )
+        })
+
+        // Section 54: Typewriter Scroll
+        ScrollTrigger.create({
+          trigger: '.section-typewriter',
+          start: 'top 60%',
+          end: 'center center',
+          scrub: 1,
+          onUpdate: (self) => {
+            const text = document.querySelector('.typewriter-text') as HTMLElement
+            const fullText = text?.getAttribute('data-text') || ''
+            if (text) {
+              const chars = Math.floor(self.progress * fullText.length)
+              text.textContent = fullText.substring(0, chars) + (self.progress < 1 ? '|' : '')
+            }
+          }
+        })
+
+        // Section 55: Color Morph Background
+        gsap.to('.section-color-morph', {
+          background: 'linear-gradient(135deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%)',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.section-color-morph',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1
+          }
+        })
+
+        // Section 56: 3D Card Stack Shuffle
+        gsap.utils.toArray('.shuffle-card').forEach((card, i, arr) => {
+          gsap.fromTo(card as HTMLElement,
+            { z: -i * 50, rotateY: i * 5, x: i * 20 },
+            { z: 0, rotateY: 0, x: 0, ease: 'power2.out',
+              scrollTrigger: { trigger: '.section-shuffle', start: 'top 60%', end: 'center center', scrub: 1 }
+            }
+          )
+        })
+
+        // Section 57: Infinite Zoom Tunnel
+        gsap.to('.tunnel-layer', {
+          scale: 10,
+          opacity: 0,
+          stagger: 0.1,
+          ease: 'none',
+          scrollTrigger: { trigger: '.section-infinite-tunnel', start: 'top top', end: 'bottom bottom', scrub: 1, pin: true }
+        })
+
       }, containerRef)
 
       return () => ctx.revert()
@@ -1274,6 +1583,287 @@ export default function ScrollEffectsPage() {
               <p className="text-xl text-white/60 mt-4">Zoom + Clip Circle Animation</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* SECTION 38: Scroll Velocity Skew */}
+      <section className="section-velocity-skew min-h-[200vh] relative bg-gradient-to-b from-black via-indigo-950/30 to-black overflow-hidden">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-indigo-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 38 • Velocity Skew</span>
+          <div className="text-center">
+            <h2 className="velocity-skew-text text-6xl md:text-[150px] font-black bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-none">
+              VELOCITY
+            </h2>
+            <p className="text-xl text-white/50 mt-8">Scrollea rápido para ver el efecto skew</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 39: Video Scrub Control */}
+      <section className="section-video-scrub min-h-[300vh] relative bg-black">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-red-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 39 • Video Scrub</span>
+          <div className="relative w-full max-w-4xl aspect-video bg-gradient-to-br from-red-900 to-orange-900 rounded-3xl overflow-hidden flex items-center justify-center">
+            <video className="scroll-video w-full h-full object-cover opacity-80" muted playsInline preload="auto">
+              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <span className="text-8xl">🎬</span>
+                <p className="text-white text-xl mt-4">Scrollea para controlar el video</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 40: Text Scramble */}
+      <section className="section-scramble min-h-screen flex items-center justify-center relative bg-gradient-to-b from-black to-green-950/30">
+        <span className="absolute top-8 left-8 text-green-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 40 • Text Scramble</span>
+        <div className="text-center">
+          <h2 className="scramble-text text-5xl md:text-8xl font-mono font-black text-green-400" data-text="HACKED">
+            HACKED
+          </h2>
+          <p className="text-xl text-white/50 mt-8">Efecto de hackeo estilo película</p>
+        </div>
+      </section>
+
+      {/* SECTION 41: Sticky Cross-Fade */}
+      <section className="section-crossfade min-h-[400vh] relative">
+        <span className="absolute top-8 left-8 text-purple-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 41 • Cross-Fade</span>
+        <div className="sticky top-0 h-screen">
+          {['from-purple-900 to-indigo-900', 'from-blue-900 to-cyan-900', 'from-teal-900 to-green-900', 'from-yellow-900 to-orange-900'].map((gradient, i) => (
+            <div key={i} className={`crossfade-panel absolute inset-0 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
+              <h2 className="text-6xl md:text-8xl font-black text-white/80">Panel {i + 1}</h2>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SECTION 42: Perspective Tilt on Scroll */}
+      <section className="section-tilt min-h-screen flex items-center py-20 relative bg-gradient-to-b from-black to-slate-900" style={{ perspective: '1000px' }}>
+        <span className="absolute top-8 left-8 text-cyan-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 42 • Perspective Tilt</span>
+        <div className="container mx-auto px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="tilt-card p-8 rounded-3xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30" style={{ transformStyle: 'preserve-3d' }}>
+                <div className="text-6xl mb-4">{'🎴🃏🎯'[i-1]}</div>
+                <h3 className="text-2xl font-bold text-white">Card {i}</h3>
+                <p className="text-white/60 mt-2">Se inclina según tu posición de scroll</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 43: Text Highlight Reveal */}
+      <section className="section-highlight min-h-screen flex items-center justify-center relative bg-gradient-to-b from-slate-900 to-black">
+        <span className="absolute top-8 left-8 text-yellow-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 43 • Highlight Reveal</span>
+        <div className="text-center max-w-4xl px-8">
+          <p className="highlight-text text-3xl md:text-5xl font-bold text-white leading-relaxed">
+            {['Este', 'texto', 'se', 'ilumina', 'palabra', 'por', 'palabra', 'mientras', 'scrolleas'].map((word, i) => (
+              <span key={i} className="inline-block mx-2 px-2" style={{ background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', backgroundRepeat: 'no-repeat', backgroundPosition: '0 85%', backgroundSize: '0% 30%' }}>
+                {word}
+              </span>
+            ))}
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION 44: Folding Paper Effect */}
+      <section className="section-paper min-h-[300vh] relative bg-gradient-to-b from-black to-amber-950/30" style={{ perspective: '2000px' }}>
+        <span className="absolute top-8 left-8 text-amber-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 44 • Paper Fold</span>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <div className="relative" style={{ transformStyle: 'preserve-3d' }}>
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="paper-fold w-80 h-40 bg-gradient-to-b from-amber-100 to-amber-200 rounded-lg shadow-xl flex items-center justify-center border-b border-amber-300" style={{ transformOrigin: 'top center' }}>
+                <span className="text-3xl font-bold text-amber-900">Fold {i + 1}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 45: Curtain Reveal */}
+      <section className="section-curtain min-h-screen flex items-center justify-center relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-rose-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 45 • Curtain Reveal</span>
+        <div className="curtain-left absolute left-0 top-0 w-1/2 h-full bg-gradient-to-r from-rose-900 to-rose-800 z-20 flex items-center justify-end pr-8">
+          <span className="text-6xl">🎭</span>
+        </div>
+        <div className="curtain-right absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-rose-900 to-rose-800 z-20 flex items-center justify-start pl-8">
+          <span className="text-6xl">🎭</span>
+        </div>
+        <div className="relative z-10 text-center">
+          <h2 className="text-6xl md:text-8xl font-black bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text text-transparent">REVEAL!</h2>
+          <p className="text-xl text-white/50 mt-4">El telón se abre con el scroll</p>
+        </div>
+      </section>
+
+      {/* SECTION 46: CSS Filter Progression */}
+      <section className="section-filter min-h-[200vh] relative bg-black overflow-hidden">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-violet-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 46 • Filter Progression</span>
+          <div className="filter-image w-full max-w-4xl aspect-video rounded-3xl overflow-hidden">
+            <div className="w-full h-full bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 flex items-center justify-center">
+              <div className="text-center">
+                <span className="text-[150px]">🌈</span>
+                <h3 className="text-4xl font-black text-white">De Gris a Color</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 47: Scatter Gather 3D */}
+      <section className="section-scatter min-h-[200vh] relative bg-gradient-to-b from-black to-emerald-950/30" style={{ perspective: '1000px' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-emerald-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 47 • Scatter Gather</span>
+          <div className="relative w-96 h-96 flex items-center justify-center" style={{ transformStyle: 'preserve-3d' }}>
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className={`scatter-item absolute w-16 h-16 rounded-xl bg-gradient-to-br ${['from-emerald-400 to-teal-500', 'from-green-400 to-emerald-500', 'from-teal-400 to-cyan-500'][i % 3]} flex items-center justify-center shadow-xl`}>
+                <span className="text-2xl font-black text-white">{i + 1}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 48: Scroll Progress Map */}
+      <section className="section-progress-map min-h-[400vh] relative bg-black">
+        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="progress-dot w-3 h-3 rounded-full bg-white/50 transition-all duration-300" />
+          ))}
+        </div>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <section key={i} className={`map-section-${i} h-screen flex items-center justify-center`}>
+            <span className="absolute top-8 left-8 text-white/50 text-sm font-semibold tracking-widest uppercase">Efecto 48 • Progress Map - Section {i}</span>
+            <div className={`text-center p-12 rounded-3xl bg-gradient-to-br ${['from-blue-600/20 to-indigo-600/20', 'from-purple-600/20 to-pink-600/20', 'from-green-600/20 to-teal-600/20', 'from-orange-600/20 to-red-600/20', 'from-cyan-600/20 to-blue-600/20'][i-1]} border border-white/10`}>
+              <h2 className="text-6xl font-black text-white">Section {i}</h2>
+              <p className="text-white/50 mt-4">Observa el mapa de progreso a la derecha</p>
+            </div>
+          </section>
+        ))}
+      </section>
+
+      {/* SECTION 49: Zoom to Detail */}
+      <section className="section-zoom-detail min-h-[300vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-sky-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 49 • Zoom to Detail</span>
+        <div className="zoom-detail h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-[300px] leading-none">🌍</div>
+            <h3 className="text-4xl font-black text-white mt-8">Del Macro al Micro</h3>
+            <p className="text-white/50 mt-4">Zoom extremo controlado por scroll</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 50: Confetti Celebration */}
+      <section className="section-confetti min-h-screen flex items-center justify-center relative bg-gradient-to-b from-black to-yellow-950/30 overflow-hidden">
+        <span className="absolute top-8 left-8 text-yellow-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 50 • Confetti!</span>
+        <div className="confetti-container absolute inset-0 pointer-events-none" />
+        <div className="relative z-10 text-center">
+          <h2 className="text-6xl md:text-8xl font-black text-white">🎉 CELEBRA! 🎉</h2>
+          <p className="text-xl text-white/50 mt-8">El confeti explota al llegar aquí</p>
+        </div>
+      </section>
+
+      {/* SECTION 51: Magnetic Cursor Effect */}
+      <section className="section-magnetic-cursor min-h-screen flex items-center justify-center relative bg-gradient-to-b from-yellow-950/30 to-black">
+        <span className="absolute top-8 left-8 text-pink-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 51 • Magnetic Cursor</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {['🧲', '💫', '✨', '⚡'].map((emoji, i) => (
+            <div key={i} className="magnetic-cursor-item w-32 h-32 rounded-2xl bg-gradient-to-br from-pink-500/30 to-purple-600/30 border border-pink-500/50 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors">
+              <span className="text-5xl">{emoji}</span>
+            </div>
+          ))}
+        </div>
+        <p className="absolute bottom-8 text-white/50">Mueve el cursor sobre los elementos</p>
+      </section>
+
+      {/* SECTION 52: Particle Flow */}
+      <section className="section-particle-flow min-h-[200vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-blue-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 52 • Particle Flow</span>
+        <canvas className="particle-canvas absolute inset-0" />
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <div className="text-center relative z-10">
+            <h2 className="text-6xl font-black text-white/80">Flujo de Partículas</h2>
+            <p className="text-xl text-white/50 mt-4">Las partículas reaccionan a la velocidad del scroll</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 53: Scroll Snap Hybrid */}
+      <section className="section-snap-hybrid bg-black" style={{ scrollSnapType: 'y mandatory' }}>
+        <span className="fixed top-8 left-8 text-orange-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 53 • Snap Hybrid</span>
+        {['🚀', '🌟', '💎', '🔥'].map((emoji, i) => (
+          <div key={i} className="snap-section h-screen flex items-center justify-center" style={{ scrollSnapAlign: 'start' }}>
+            <div className={`p-16 rounded-3xl bg-gradient-to-br ${['from-orange-600/20 to-red-600/20', 'from-purple-600/20 to-pink-600/20', 'from-cyan-600/20 to-blue-600/20', 'from-yellow-600/20 to-orange-600/20'][i]} border border-white/10`}>
+              <span className="text-[100px] block text-center">{emoji}</span>
+              <h3 className="text-3xl font-bold text-white text-center mt-4">Snap Section {i + 1}</h3>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* SECTION 54: Typewriter Scroll */}
+      <section className="section-typewriter min-h-[200vh] relative bg-gradient-to-b from-black to-green-950/20">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-green-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 54 • Typewriter</span>
+          <div className="text-center">
+            <p className="typewriter-text text-3xl md:text-5xl font-mono text-green-400" data-text="El texto se escribe mientras scrolleas...">|</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 55: Color Morph Background */}
+      <section className="section-color-morph min-h-[200vh] relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-white text-sm font-semibold tracking-widest uppercase z-20">Efecto 55 • Color Morph</span>
+          <div className="text-center">
+            <h2 className="text-6xl md:text-8xl font-black text-white">MORPHING</h2>
+            <p className="text-xl text-white/70 mt-4">El fondo cambia de color con el scroll</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 56: 3D Card Stack Shuffle */}
+      <section className="section-shuffle min-h-[200vh] relative bg-black" style={{ perspective: '1500px' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <span className="absolute top-8 left-8 text-fuchsia-400 text-sm font-semibold tracking-widest uppercase z-20">Efecto 56 • Card Shuffle</span>
+          <div className="relative w-72 h-96" style={{ transformStyle: 'preserve-3d' }}>
+            {['from-fuchsia-500 to-pink-600', 'from-purple-500 to-violet-600', 'from-blue-500 to-cyan-600', 'from-teal-500 to-green-600', 'from-yellow-500 to-orange-600'].map((gradient, i) => (
+              <div key={i} className={`shuffle-card absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-2xl`}>
+                <span className="text-6xl font-black text-white">{i + 1}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 57: Infinite Zoom Tunnel */}
+      <section className="section-infinite-tunnel min-h-[400vh] relative bg-black overflow-hidden">
+        <span className="absolute top-8 left-8 text-cyan-400 text-sm font-semibold tracking-widest uppercase z-30">Efecto 57 • Infinite Tunnel</span>
+        <div className="h-screen flex items-center justify-center">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className={`tunnel-layer absolute rounded-full border-4 ${['border-cyan-500', 'border-blue-500', 'border-purple-500', 'border-pink-500', 'border-red-500'][i % 5]}`}
+              style={{ width: `${(i + 1) * 10}vw`, height: `${(i + 1) * 10}vw`, opacity: 1 - i * 0.08 }} />
+          ))}
+          <h2 className="relative z-10 text-4xl font-black text-white">∞ INFINITY ∞</h2>
+        </div>
+      </section>
+
+      {/* GRAND FINALE */}
+      <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-t from-purple-950/50 via-black to-blue-950/50">
+        <div className="absolute inset-0">
+          {Array.from({ length: 150 }).map((_, i) => (
+            <div key={i} className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+              style={{ left: `${(i * 0.67) % 100}%`, top: `${(i * 1.3) % 100}%`, animationDelay: `${(i * 0.03) % 3}s`, opacity: 0.2 + (i % 5) * 0.1 }} />
+          ))}
+        </div>
+        <div className="relative z-10 text-center px-4">
+          <h2 className="text-6xl md:text-9xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent mb-8">57 EFECTOS</h2>
+          <p className="text-2xl text-white/50 max-w-2xl mx-auto mb-12">Has explorado todos los efectos ScrollTrigger de nivel profesional. ¡Ahora es tu turno de crear!</p>
         </div>
       </section>
 
