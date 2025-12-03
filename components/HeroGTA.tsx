@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useLayoutEffect } from 'react'
+import { useEffect, useRef, useLayoutEffect, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Image from 'next/image'
@@ -19,22 +19,33 @@ export default function HeroGTA() {
   const orb3Ref = useRef<HTMLDivElement>(null)
   const gridRef = useRef<HTMLDivElement>(null)
   const glowRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   const titleText = "GarBotGPT"
   const subtitleText = "Tu Asistente de IA Más Potente"
 
+  // Detectar móvil
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
-      // Initial states
-      gsap.set(titleCharsRef.current, { y: 120, opacity: 0, rotateX: -90 })
-      gsap.set(subtitleRef.current, { y: 60, opacity: 0, filter: 'blur(10px)' })
-      gsap.set(ctaRef.current, { y: 40, opacity: 0, scale: 0.9 })
+      // Initial states - valores reducidos para móvil
+      gsap.set(titleCharsRef.current, { y: mobile ? 60 : 120, opacity: 0, rotateX: mobile ? -45 : -90 })
+      gsap.set(subtitleRef.current, { y: mobile ? 30 : 60, opacity: 0, filter: mobile ? 'blur(5px)' : 'blur(10px)' })
+      gsap.set(ctaRef.current, { y: mobile ? 20 : 40, opacity: 0, scale: 0.9 })
       gsap.set(scrollIndicatorRef.current, { y: 20, opacity: 0 })
       gsap.set([orb1Ref.current, orb2Ref.current, orb3Ref.current], { scale: 0, opacity: 0 })
       gsap.set(gridRef.current, { opacity: 0 })
       gsap.set(glowRef.current, { scale: 0.5, opacity: 0 })
 
-      // MASTER TIMELINE - Entrada épica
+      // MASTER TIMELINE - Entrada épica (más rápida en móvil)
       const masterTL = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
       // 1. Background elements first
@@ -42,52 +53,54 @@ export default function HeroGTA() {
         .to(glowRef.current, {
           scale: 1,
           opacity: 1,
-          duration: 2,
+          duration: mobile ? 1.2 : 2,
           ease: 'power2.out'
         })
         .to(gridRef.current, {
-          opacity: 0.3,
-          duration: 1.5,
+          opacity: mobile ? 0.2 : 0.3,
+          duration: mobile ? 1 : 1.5,
         }, '-=1.5')
         .to([orb1Ref.current, orb2Ref.current, orb3Ref.current], {
           scale: 1,
-          opacity: 1,
-          duration: 1.5,
-          stagger: 0.2,
-          ease: 'elastic.out(1, 0.5)'
+          opacity: mobile ? 0.7 : 1,
+          duration: mobile ? 1 : 1.5,
+          stagger: mobile ? 0.1 : 0.2,
+          ease: mobile ? 'power2.out' : 'elastic.out(1, 0.5)'
         }, '-=1')
 
-      // 2. Title chars - Efecto ÉPICO letra por letra
+      // 2. Title chars - Efecto ÉPICO letra por letra (más suave en móvil)
       masterTL.to(titleCharsRef.current, {
         y: 0,
         opacity: 1,
         rotateX: 0,
-        duration: 1.2,
+        duration: mobile ? 0.8 : 1.2,
         stagger: {
-          each: 0.08,
+          each: mobile ? 0.05 : 0.08,
           from: 'center'
         },
-        ease: 'back.out(1.7)'
+        ease: mobile ? 'power3.out' : 'back.out(1.7)'
       }, '-=0.5')
 
-      // 3. Glitch effect on title
-      .add(() => {
-        gsap.to(titleRef.current, {
-          x: 'random(-5, 5)',
-          duration: 0.1,
-          repeat: 5,
-          yoyo: true,
-          ease: 'power1.inOut',
-          onComplete: () => gsap.set(titleRef.current, { x: 0 })
+      // 3. Glitch effect on title (solo en desktop)
+      if (!mobile) {
+        masterTL.add(() => {
+          gsap.to(titleRef.current, {
+            x: 'random(-5, 5)',
+            duration: 0.1,
+            repeat: 5,
+            yoyo: true,
+            ease: 'power1.inOut',
+            onComplete: () => gsap.set(titleRef.current, { x: 0 })
+          })
         })
-      })
+      }
 
       // 4. Subtitle reveal
-      .to(subtitleRef.current, {
+      masterTL.to(subtitleRef.current, {
         y: 0,
         opacity: 1,
         filter: 'blur(0px)',
-        duration: 1,
+        duration: mobile ? 0.6 : 1,
         ease: 'power3.out'
       }, '-=0.3')
 
@@ -96,7 +109,7 @@ export default function HeroGTA() {
         y: 0,
         opacity: 1,
         scale: 1,
-        duration: 0.8,
+        duration: mobile ? 0.5 : 0.8,
         ease: 'back.out(1.5)'
       }, '-=0.5')
 
@@ -104,16 +117,16 @@ export default function HeroGTA() {
       .to(scrollIndicatorRef.current, {
         y: 0,
         opacity: 1,
-        duration: 0.6
+        duration: mobile ? 0.4 : 0.6
       }, '-=0.3')
 
-      // SCROLL ANIMATIONS - Parallax multinivel
+      // SCROLL ANIMATIONS - Parallax multinivel (reducido en móvil)
 
       // Título se va con parallax 3D
       gsap.to(titleRef.current, {
-        y: -200,
-        scale: 0.8,
-        rotateX: 20,
+        y: mobile ? -80 : -200,
+        scale: mobile ? 0.9 : 0.8,
+        rotateX: mobile ? 10 : 20,
         opacity: 0,
         ease: 'none',
         scrollTrigger: {
@@ -126,9 +139,9 @@ export default function HeroGTA() {
 
       // Subtitle parallax
       gsap.to(subtitleRef.current, {
-        y: -100,
+        y: mobile ? -40 : -100,
         opacity: 0,
-        filter: 'blur(10px)',
+        filter: mobile ? 'blur(5px)' : 'blur(10px)',
         ease: 'none',
         scrollTrigger: {
           trigger: heroRef.current,
@@ -138,11 +151,11 @@ export default function HeroGTA() {
         }
       })
 
-      // Orbs parallax a diferentes velocidades
+      // Orbs parallax a diferentes velocidades (reducido en móvil)
       gsap.to(orb1Ref.current, {
-        y: -300,
-        x: -100,
-        scale: 1.5,
+        y: mobile ? -100 : -300,
+        x: mobile ? -30 : -100,
+        scale: mobile ? 1.2 : 1.5,
         ease: 'none',
         scrollTrigger: {
           trigger: heroRef.current,
@@ -153,9 +166,9 @@ export default function HeroGTA() {
       })
 
       gsap.to(orb2Ref.current, {
-        y: -200,
-        x: 150,
-        scale: 0.5,
+        y: mobile ? -80 : -200,
+        x: mobile ? 50 : 150,
+        scale: mobile ? 0.7 : 0.5,
         ease: 'none',
         scrollTrigger: {
           trigger: heroRef.current,
@@ -166,8 +179,8 @@ export default function HeroGTA() {
       })
 
       gsap.to(orb3Ref.current, {
-        y: -400,
-        scale: 2,
+        y: mobile ? -150 : -400,
+        scale: mobile ? 1.5 : 2,
         ease: 'none',
         scrollTrigger: {
           trigger: heroRef.current,
@@ -179,7 +192,7 @@ export default function HeroGTA() {
 
       // Grid parallax
       gsap.to(gridRef.current, {
-        y: -100,
+        y: mobile ? -40 : -100,
         opacity: 0,
         ease: 'none',
         scrollTrigger: {

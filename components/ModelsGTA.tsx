@@ -22,38 +22,43 @@ export default function ModelsGTA() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
 
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
-      // Title reveal with split
+      // Title reveal with split (más suave en móvil)
       gsap.fromTo(titleRef.current,
-        { y: 100, opacity: 0, rotateX: -45 },
+        { y: mobile ? 50 : 100, opacity: 0, rotateX: mobile ? -20 : -45 },
         {
           y: 0, opacity: 1, rotateX: 0,
-          duration: 1.2,
-          ease: 'back.out(1.7)',
-          scrollTrigger: { trigger: titleRef.current, start: 'top 85%', toggleActions: 'play none none reverse' }
+          duration: mobile ? 0.8 : 1.2,
+          ease: mobile ? 'power3.out' : 'back.out(1.7)',
+          scrollTrigger: { trigger: titleRef.current, start: mobile ? 'top 95%' : 'top 85%', toggleActions: 'play none none reverse' }
         }
       )
 
-      // Cards 3D staggered reveal
+      // Cards 3D staggered reveal (adaptado para móvil)
       cardsRef.current.forEach((card, i) => {
         if (!card) return
-        
-        gsap.set(card, { 
-          rotateY: i % 2 === 0 ? -90 : 90,
+
+        // En móvil: animación más simple sin rotaciones 3D extremas
+        gsap.set(card, {
+          rotateY: mobile ? 0 : (i % 2 === 0 ? -90 : 90),
           opacity: 0,
-          scale: 0.5,
+          scale: mobile ? 0.9 : 0.5,
+          y: mobile ? 30 : 0,
           transformPerspective: 1000,
-          transformOrigin: i % 2 === 0 ? 'right center' : 'left center'
+          transformOrigin: mobile ? 'center center' : (i % 2 === 0 ? 'right center' : 'left center')
         })
 
         gsap.to(card, {
           rotateY: 0,
           opacity: 1,
           scale: 1,
-          duration: 1,
-          delay: i * 0.1,
+          y: 0,
+          duration: mobile ? 0.6 : 1,
+          delay: i * (mobile ? 0.05 : 0.1),
           ease: 'power3.out',
-          scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none reverse' }
+          scrollTrigger: { trigger: card, start: mobile ? 'top 95%' : 'top 90%', toggleActions: 'play none none reverse' }
         })
 
         // Power bar animation
@@ -63,21 +68,23 @@ export default function ModelsGTA() {
             { scaleX: 0 },
             {
               scaleX: 1,
-              duration: 1.5,
-              delay: i * 0.1 + 0.5,
+              duration: mobile ? 1 : 1.5,
+              delay: i * (mobile ? 0.05 : 0.1) + 0.3,
               ease: 'power2.out',
-              scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' }
+              scrollTrigger: { trigger: card, start: mobile ? 'top 95%' : 'top 85%', toggleActions: 'play none none reverse' }
             }
           )
         }
 
-        // Hover 3D effect
-        card.addEventListener('mouseenter', () => {
-          gsap.to(card, { scale: 1.05, rotateY: 5, rotateX: -5, duration: 0.4, ease: 'power2.out' })
-        })
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, { scale: 1, rotateY: 0, rotateX: 0, duration: 0.4, ease: 'power2.out' })
-        })
+        // Hover 3D effect (solo en desktop)
+        if (!mobile) {
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, { scale: 1.05, rotateY: 5, rotateX: -5, duration: 0.4, ease: 'power2.out' })
+          })
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, { scale: 1, rotateY: 0, rotateX: 0, duration: 0.4, ease: 'power2.out' })
+          })
+        }
       })
 
     }, sectionRef)

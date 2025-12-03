@@ -65,25 +65,28 @@ export default function DemoGTA() {
   }, [])
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // Initial states
-      gsap.set(titleCharsRef.current, { y: 100, opacity: 0, rotateX: -90 })
-      gsap.set(chatRef.current, { y: 100, opacity: 0, scale: 0.8, rotateX: -15 })
+    const mobile = window.innerWidth < 768
 
-      // Create scanning lines
+    const ctx = gsap.context(() => {
+      // Initial states (reducidos para móvil)
+      gsap.set(titleCharsRef.current, { y: mobile ? 50 : 100, opacity: 0, rotateX: mobile ? -45 : -90 })
+      gsap.set(chatRef.current, { y: mobile ? 50 : 100, opacity: 0, scale: mobile ? 0.9 : 0.8, rotateX: mobile ? -8 : -15 })
+
+      // Create scanning lines (menos en móvil)
       if (linesRef.current) {
-        for (let i = 0; i < 5; i++) {
+        const lineCount = mobile ? 3 : 5
+        for (let i = 0; i < lineCount; i++) {
           const line = document.createElement('div')
           line.className = 'absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent'
-          line.style.top = `${20 + i * 20}%`
+          line.style.top = `${20 + i * (mobile ? 30 : 20)}%`
           linesRef.current.appendChild(line)
 
           gsap.to(line, {
             y: window.innerHeight,
             opacity: 0,
-            duration: 3,
+            duration: mobile ? 4 : 3,
             repeat: -1,
-            delay: i * 0.5,
+            delay: i * (mobile ? 0.8 : 0.5),
             ease: 'none'
           })
         }
@@ -93,7 +96,7 @@ export default function DemoGTA() {
       const entranceTL = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 80%',
+          start: mobile ? 'top 90%' : 'top 80%',
           toggleActions: 'play none none reverse'
         }
       })
@@ -101,19 +104,19 @@ export default function DemoGTA() {
       entranceTL
         // Glow pulse
         .to(glowRef.current, {
-          scale: 1.2,
-          opacity: 0.8,
-          duration: 1,
+          scale: mobile ? 1.1 : 1.2,
+          opacity: mobile ? 0.6 : 0.8,
+          duration: mobile ? 0.7 : 1,
           ease: 'power2.out'
         })
-        // Title chars explosion
+        // Title chars explosion (más suave en móvil)
         .to(titleCharsRef.current, {
           y: 0,
           opacity: 1,
           rotateX: 0,
-          duration: 1,
-          stagger: { each: 0.05, from: 'center' },
-          ease: 'back.out(2)'
+          duration: mobile ? 0.7 : 1,
+          stagger: { each: mobile ? 0.03 : 0.05, from: 'center' },
+          ease: mobile ? 'power3.out' : 'back.out(2)'
         }, '-=0.5')
         // Chat window
         .to(chatRef.current, {
@@ -121,15 +124,15 @@ export default function DemoGTA() {
           opacity: 1,
           scale: 1,
           rotateX: 0,
-          duration: 1.2,
+          duration: mobile ? 0.8 : 1.2,
           ease: 'power3.out'
         }, '-=0.5')
 
-      // PIN section and show messages on scroll
+      // PIN section and show messages on scroll (reducido en móvil)
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: 'top top',
-        end: '+=500%',
+        end: mobile ? '+=300%' : '+=500%',
         pin: true,
         onUpdate: (self) => {
           const progress = self.progress
@@ -141,10 +144,10 @@ export default function DemoGTA() {
           }
           setVisibleMessages(newVisible)
 
-          // Rotate glow based on scroll
+          // Rotate glow based on scroll (menos en móvil)
           gsap.to(glowRef.current, {
-            rotation: progress * 360,
-            scale: 1 + progress * 0.3,
+            rotation: progress * (mobile ? 180 : 360),
+            scale: 1 + progress * (mobile ? 0.15 : 0.3),
             duration: 0.1
           })
         }

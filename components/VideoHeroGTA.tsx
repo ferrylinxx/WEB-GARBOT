@@ -68,26 +68,28 @@ export default function VideoHeroGTA() {
   useEffect(() => {
     if (!isClient || !containerRef.current || !revealRef.current) return
 
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
       // Main container fade in
       gsap.fromTo(containerRef.current,
         { opacity: 0 },
         {
           opacity: 1,
-          duration: 0.5,
+          duration: mobile ? 0.3 : 0.5,
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 90%',
+            start: mobile ? 'top 95%' : 'top 90%',
           }
         }
       )
 
-      // Image Zoom Reveal Effect - Circle clip path animation
+      // Image Zoom Reveal Effect - Circle clip path animation (más suave en móvil)
       gsap.fromTo(revealRef.current,
         {
-          scale: 2.5,
+          scale: mobile ? 1.8 : 2.5,
           clipPath: 'circle(0% at 50% 50%)',
-          filter: 'blur(20px)'
+          filter: mobile ? 'blur(10px)' : 'blur(20px)'
         },
         {
           scale: 1,
@@ -96,41 +98,41 @@ export default function VideoHeroGTA() {
           ease: 'power2.inOut',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 70%',
-            end: 'center center',
-            scrub: 1
+            start: mobile ? 'top 85%' : 'top 70%',
+            end: mobile ? 'top 30%' : 'center center',
+            scrub: mobile ? 0.5 : 1
           }
         }
       )
 
-      // Header text animation
+      // Header text animation (más suave en móvil)
       gsap.fromTo('.video-hero-title',
-        { y: 100, opacity: 0, scale: 0.8 },
+        { y: mobile ? 50 : 100, opacity: 0, scale: mobile ? 0.9 : 0.8 },
         {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 1,
-          ease: 'back.out(1.7)',
+          duration: mobile ? 0.7 : 1,
+          ease: mobile ? 'power3.out' : 'back.out(1.7)',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: mobile ? 'top 75%' : 'top 60%',
           }
         }
       )
 
       // Subtitle animation
       gsap.fromTo('.video-hero-subtitle',
-        { y: 50, opacity: 0 },
+        { y: mobile ? 25 : 50, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.8,
-          delay: 0.2,
+          duration: mobile ? 0.5 : 0.8,
+          delay: mobile ? 0.1 : 0.2,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: mobile ? 'top 75%' : 'top 60%',
           }
         }
       )

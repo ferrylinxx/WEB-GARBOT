@@ -95,34 +95,38 @@ export default function PricingGTA() {
   }, [isYearly])
 
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
-      // Title
+      // Title (más suave en móvil)
       gsap.fromTo(titleRef.current,
-        { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: titleRef.current, start: 'top 85%' } }
+        { y: mobile ? 40 : 80, opacity: 0 },
+        { y: 0, opacity: 1, duration: mobile ? 0.7 : 1, ease: 'power3.out', scrollTrigger: { trigger: titleRef.current, start: mobile ? 'top 95%' : 'top 85%' } }
       )
 
-      // Cards cascade
+      // Cards cascade (adaptado para móvil)
       cardsRef.current.forEach((card, i) => {
         if (!card) return
         gsap.fromTo(card,
-          { y: 150, opacity: 0, rotateX: -15, scale: 0.9 },
+          { y: mobile ? 60 : 150, opacity: 0, rotateX: mobile ? -5 : -15, scale: mobile ? 0.95 : 0.9 },
           {
             y: 0, opacity: 1, rotateX: 0, scale: 1,
-            duration: 1,
-            delay: i * 0.2,
+            duration: mobile ? 0.6 : 1,
+            delay: i * (mobile ? 0.1 : 0.2),
             ease: 'power3.out',
-            scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none reverse' }
+            scrollTrigger: { trigger: card, start: mobile ? 'top 95%' : 'top 90%', toggleActions: 'play none none reverse' }
           }
         )
 
-        // Hover effect
-        card.addEventListener('mouseenter', () => {
-          gsap.to(card, { y: -10, scale: 1.02, duration: 0.3, ease: 'power2.out' })
-        })
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, { y: 0, scale: 1, duration: 0.3, ease: 'power2.out' })
-        })
+        // Hover effect (solo en desktop)
+        if (!mobile) {
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, { y: -10, scale: 1.02, duration: 0.3, ease: 'power2.out' })
+          })
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, { y: 0, scale: 1, duration: 0.3, ease: 'power2.out' })
+          })
+        }
       })
 
     }, sectionRef)

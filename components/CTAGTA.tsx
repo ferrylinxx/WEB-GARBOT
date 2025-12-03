@@ -22,10 +22,13 @@ export default function CTAGTA() {
   const subtitleWord = "AHORA"
 
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
-      // Create particles
+      // Create particles (menos en móvil)
       if (particlesRef.current) {
-        for (let i = 0; i < 50; i++) {
+        const particleCount = mobile ? 20 : 50
+        for (let i = 0; i < particleCount; i++) {
           const particle = document.createElement('div')
           particle.className = 'absolute w-1 h-1 bg-blue-500 rounded-full'
           particle.style.left = `${Math.random() * 100}%`
@@ -34,10 +37,10 @@ export default function CTAGTA() {
           particlesRef.current.appendChild(particle)
 
           gsap.to(particle, {
-            y: -200 - Math.random() * 200,
-            x: (Math.random() - 0.5) * 100,
-            opacity: Math.random() * 0.5,
-            duration: 3 + Math.random() * 2,
+            y: mobile ? -100 - Math.random() * 100 : -200 - Math.random() * 200,
+            x: (Math.random() - 0.5) * (mobile ? 50 : 100),
+            opacity: Math.random() * (mobile ? 0.3 : 0.5),
+            duration: mobile ? 4 + Math.random() * 3 : 3 + Math.random() * 2,
             repeat: -1,
             delay: Math.random() * 2,
             ease: 'none'
@@ -45,10 +48,10 @@ export default function CTAGTA() {
         }
       }
 
-      // Rings animation
+      // Rings animation (más lento en móvil)
       gsap.to('.cta-ring', {
         rotation: 360,
-        duration: 30,
+        duration: mobile ? 40 : 30,
         repeat: -1,
         ease: 'none',
         stagger: {
@@ -61,26 +64,26 @@ export default function CTAGTA() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 80%',
-          end: 'top 20%',
+          start: mobile ? 'top 90%' : 'top 80%',
+          end: mobile ? 'top 40%' : 'top 20%',
           toggleActions: 'play none none reverse'
         }
       })
 
-      // Rings scale in
+      // Rings scale in (más suave en móvil)
       tl.fromTo('.cta-ring',
         { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1, stagger: 0.1, ease: 'back.out(1.7)' }
+        { scale: 1, opacity: 1, duration: mobile ? 0.7 : 1, stagger: mobile ? 0.05 : 0.1, ease: mobile ? 'power3.out' : 'back.out(1.7)' }
       )
 
-      // Title chars explosion from center
+      // Title chars explosion from center (más suave en móvil)
       .fromTo(titleCharsRef.current,
         {
           scale: 0,
           opacity: 0,
-          rotation: () => gsap.utils.random(-180, 180),
-          y: () => gsap.utils.random(-100, 100),
-          x: () => gsap.utils.random(-100, 100)
+          rotation: mobile ? 0 : (() => gsap.utils.random(-180, 180)),
+          y: mobile ? 30 : (() => gsap.utils.random(-100, 100)),
+          x: mobile ? 0 : (() => gsap.utils.random(-100, 100))
         },
         {
           scale: 1,
@@ -88,35 +91,35 @@ export default function CTAGTA() {
           rotation: 0,
           y: 0,
           x: 0,
-          duration: 1,
-          stagger: { each: 0.05, from: 'center' },
-          ease: 'back.out(1.7)'
+          duration: mobile ? 0.6 : 1,
+          stagger: { each: mobile ? 0.03 : 0.05, from: 'center' },
+          ease: mobile ? 'power3.out' : 'back.out(1.7)'
         }, '-=0.5'
       )
 
       // Subtitle word
       .fromTo(subtitleRef.current,
-        { y: 50, opacity: 0, filter: 'blur(20px)' },
-        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' },
+        { y: mobile ? 25 : 50, opacity: 0, filter: mobile ? 'blur(10px)' : 'blur(20px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', duration: mobile ? 0.5 : 0.8, ease: 'power3.out' },
         '-=0.3'
       )
 
       // Button
       .fromTo(buttonRef.current,
-        { y: 30, opacity: 0, scale: 0.8 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)' },
+        { y: mobile ? 15 : 30, opacity: 0, scale: mobile ? 0.9 : 0.8 },
+        { y: 0, opacity: 1, scale: 1, duration: mobile ? 0.4 : 0.6, ease: mobile ? 'power3.out' : 'back.out(1.7)' },
         '-=0.2'
       )
 
       // Stats
       .fromTo(statsRef.current?.children || [],
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out' },
+        { y: mobile ? 10 : 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: mobile ? 0.3 : 0.5, stagger: mobile ? 0.05 : 0.1, ease: 'power2.out' },
         '-=0.2'
       )
 
-      // Hover animation for button
-      if (buttonRef.current) {
+      // Hover animation for button (solo desktop)
+      if (buttonRef.current && !mobile) {
         buttonRef.current.addEventListener('mouseenter', () => {
           gsap.to(buttonRef.current, {
             scale: 1.05,

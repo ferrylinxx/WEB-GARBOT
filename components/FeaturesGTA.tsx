@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useLayoutEffect } from 'react'
+import { useEffect, useRef, useLayoutEffect, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import LottieIcon from './LottieIcon'
@@ -50,57 +50,59 @@ export default function FeaturesGTA() {
   const lineRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
       // Horizontal line animation
       gsap.fromTo(lineRef.current,
         { scaleX: 0 },
         {
           scaleX: 1,
-          duration: 1.5,
+          duration: mobile ? 1 : 1.5,
           ease: 'power3.inOut',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: mobile ? 'top 90%' : 'top 80%',
             toggleActions: 'play none none reverse'
           }
         }
       )
 
-      // Title words staggered reveal
+      // Title words staggered reveal (más suave en móvil)
       gsap.fromTo(titleWordsRef.current,
         {
-          y: 100,
+          y: mobile ? 50 : 100,
           opacity: 0,
-          rotateX: -45,
+          rotateX: mobile ? -20 : -45,
           transformOrigin: 'center bottom'
         },
         {
           y: 0,
           opacity: 1,
           rotateX: 0,
-          duration: 1.2,
-          stagger: 0.1,
-          ease: 'back.out(1.7)',
+          duration: mobile ? 0.8 : 1.2,
+          stagger: mobile ? 0.08 : 0.1,
+          ease: mobile ? 'power3.out' : 'back.out(1.7)',
           scrollTrigger: {
             trigger: headerRef.current,
-            start: 'top 75%',
+            start: mobile ? 'top 85%' : 'top 75%',
             toggleActions: 'play none none reverse'
           }
         }
       )
 
-      // Cards - Scroll-triggered 3D reveal
+      // Cards - Scroll-triggered 3D reveal (adaptado para móvil)
       cardsRef.current.forEach((card, index) => {
         if (!card) return
 
         const isLeft = index % 2 === 0
 
-        // Initial state
+        // Initial state (menos extremo en móvil)
         gsap.set(card, {
           opacity: 0,
-          x: isLeft ? -100 : 100,
-          rotateY: isLeft ? 15 : -15,
-          scale: 0.8,
+          x: mobile ? (isLeft ? -30 : 30) : (isLeft ? -100 : 100),
+          rotateY: mobile ? 0 : (isLeft ? 15 : -15),
+          scale: mobile ? 0.95 : 0.8,
           transformPerspective: 1000
         })
 
@@ -110,27 +112,29 @@ export default function FeaturesGTA() {
           x: 0,
           rotateY: 0,
           scale: 1,
-          duration: 1.2,
+          duration: mobile ? 0.8 : 1.2,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: card,
-            start: 'top 85%',
-            end: 'top 50%',
+            start: mobile ? 'top 95%' : 'top 85%',
+            end: mobile ? 'top 70%' : 'top 50%',
             toggleActions: 'play none none reverse',
           }
         })
 
-        // Parallax effect on scroll
-        gsap.to(card, {
-          y: (index % 2 === 0) ? -30 : -50,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1
-          }
-        })
+        // Parallax effect on scroll (reducido en móvil)
+        if (!mobile) {
+          gsap.to(card, {
+            y: (index % 2 === 0) ? -30 : -50,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1
+            }
+          })
+        }
       })
 
     }, sectionRef)

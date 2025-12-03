@@ -47,20 +47,22 @@ export default function ShowcaseGTA() {
   const progressRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
       // Horizontal scroll effect
       const items = itemsRef.current.filter(Boolean)
       const totalWidth = items.length * 100
 
-      // Pin and horizontal scroll
+      // Pin and horizontal scroll (scroll más corto en móvil)
       gsap.to(horizontalRef.current, {
         x: () => -(horizontalRef.current!.scrollWidth - window.innerWidth),
         ease: 'none',
         scrollTrigger: {
           trigger: triggerRef.current,
           start: 'top top',
-          end: () => `+=${horizontalRef.current!.scrollWidth}`,
-          scrub: 1,
+          end: () => `+=${mobile ? horizontalRef.current!.scrollWidth * 0.7 : horizontalRef.current!.scrollWidth}`,
+          scrub: mobile ? 0.5 : 1,
           pin: true,
           anticipatePin: 1,
         }
@@ -73,79 +75,79 @@ export default function ShowcaseGTA() {
         scrollTrigger: {
           trigger: triggerRef.current,
           start: 'top top',
-          end: () => `+=${horizontalRef.current!.scrollWidth}`,
-          scrub: 1,
+          end: () => `+=${mobile ? horizontalRef.current!.scrollWidth * 0.7 : horizontalRef.current!.scrollWidth}`,
+          scrub: mobile ? 0.5 : 1,
         }
       })
 
-      // Individual item animations
+      // Individual item animations (adaptados para móvil)
       items.forEach((item, index) => {
         const content = item?.querySelector('.showcase-content')
         const stat = item?.querySelector('.showcase-stat')
         const features = item?.querySelectorAll('.showcase-feature')
         const glow = item?.querySelector('.showcase-glow')
 
-        // Content reveal
+        // Content reveal (más simple en móvil)
         gsap.fromTo(content,
-          { opacity: 0, x: 100, rotateY: -15 },
+          { opacity: 0, x: mobile ? 50 : 100, rotateY: mobile ? 0 : -15 },
           {
             opacity: 1,
             x: 0,
             rotateY: 0,
-            duration: 1,
+            duration: mobile ? 0.7 : 1,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: item,
               containerAnimation: gsap.getById('horizontal') || undefined,
-              start: 'left 80%',
-              end: 'left 30%',
-              scrub: 1,
+              start: mobile ? 'left 90%' : 'left 80%',
+              end: mobile ? 'left 50%' : 'left 30%',
+              scrub: mobile ? 0.5 : 1,
             }
           }
         )
 
-        // Stat counter animation
+        // Stat counter animation (más simple en móvil)
         gsap.fromTo(stat,
-          { scale: 0, opacity: 0, rotation: -180 },
+          { scale: mobile ? 0.5 : 0, opacity: 0, rotation: mobile ? -90 : -180 },
           {
             scale: 1,
             opacity: 1,
             rotation: 0,
-            duration: 1.5,
-            ease: 'elastic.out(1, 0.5)',
+            duration: mobile ? 1 : 1.5,
+            ease: mobile ? 'power3.out' : 'elastic.out(1, 0.5)',
             scrollTrigger: {
               trigger: item,
               containerAnimation: gsap.getById('horizontal') || undefined,
-              start: 'left 70%',
+              start: mobile ? 'left 85%' : 'left 70%',
               toggleActions: 'play none none reverse'
             }
           }
         )
 
-        // Features stagger
+        // Features stagger (más rápido en móvil)
         gsap.fromTo(features,
-          { opacity: 0, y: 20, scale: 0.8 },
+          { opacity: 0, y: mobile ? 10 : 20, scale: mobile ? 0.9 : 0.8 },
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'back.out(1.7)',
+            duration: mobile ? 0.4 : 0.6,
+            stagger: mobile ? 0.05 : 0.1,
+            ease: mobile ? 'power3.out' : 'back.out(1.7)',
             scrollTrigger: {
               trigger: item,
               containerAnimation: gsap.getById('horizontal') || undefined,
-              start: 'left 60%',
+              start: mobile ? 'left 80%' : 'left 60%',
               toggleActions: 'play none none reverse'
             }
           }
         )
 
-        // Glow pulse
+        // Glow pulse (menos intenso en móvil)
         gsap.to(glow, {
-          scale: 1.2,
-          opacity: 0.8,
-          duration: 2,
+          scale: mobile ? 1.1 : 1.2,
+          opacity: mobile ? 0.5 : 0.8,
+          duration: mobile ? 3 : 2,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut'

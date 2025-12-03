@@ -86,35 +86,37 @@ export default function TestimonialsGTA() {
   const [activeVideo, setActiveVideo] = useState<number | null>(null)
 
   useLayoutEffect(() => {
+    const mobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
-      // Title animation
+      // Title animation (más suave en móvil)
       gsap.fromTo(titleRef.current,
-        { y: 80, opacity: 0 },
+        { y: mobile ? 40 : 80, opacity: 0 },
         {
           y: 0, opacity: 1,
-          duration: 1,
+          duration: mobile ? 0.7 : 1,
           ease: 'power3.out',
-          scrollTrigger: { trigger: titleRef.current, start: 'top 85%', toggleActions: 'play none none reverse' }
+          scrollTrigger: { trigger: titleRef.current, start: mobile ? 'top 95%' : 'top 85%', toggleActions: 'play none none reverse' }
         }
       )
 
-      // Logos animation
+      // Logos animation (más rápido en móvil)
       gsap.fromTo(logosRef.current?.children || [],
-        { y: 30, opacity: 0 },
+        { y: mobile ? 20 : 30, opacity: 0 },
         {
           y: 0, opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
+          duration: mobile ? 0.5 : 0.8,
+          stagger: mobile ? 0.06 : 0.1,
           ease: 'power2.out',
-          scrollTrigger: { trigger: logosRef.current, start: 'top 90%' }
+          scrollTrigger: { trigger: logosRef.current, start: mobile ? 'top 95%' : 'top 90%' }
         }
       )
 
-      // Infinite scroll - Track 1 (left)
+      // Infinite scroll - Track 1 (left) - más lento en móvil
       const track1Width = track1Ref.current?.scrollWidth || 0
       gsap.to(track1Ref.current, {
         x: -track1Width / 2,
-        duration: 30,
+        duration: mobile ? 40 : 30,
         ease: 'none',
         repeat: -1,
       })
@@ -125,23 +127,25 @@ export default function TestimonialsGTA() {
         { x: -track2Width / 2 },
         {
           x: 0,
-          duration: 35,
+          duration: mobile ? 45 : 35,
           ease: 'none',
           repeat: -1,
         }
       )
 
-      // Parallax on scroll
-      gsap.to(track1Ref.current, {
-        x: '+=100',
-        ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: 2 }
-      })
-      gsap.to(track2Ref.current, {
-        x: '-=100',
-        ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: 2 }
-      })
+      // Parallax on scroll (reducido en móvil)
+      if (!mobile) {
+        gsap.to(track1Ref.current, {
+          x: '+=100',
+          ease: 'none',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: 2 }
+        })
+        gsap.to(track2Ref.current, {
+          x: '-=100',
+          ease: 'none',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: 2 }
+        })
+      }
 
     }, sectionRef)
     return () => ctx.revert()
